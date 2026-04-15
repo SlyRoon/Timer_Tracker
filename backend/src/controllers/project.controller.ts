@@ -22,14 +22,14 @@ export const ProjectController = {
   }),
 
   getProjectById: asyncHandler(async (req, res) => {
-    const project = await ProjectService.getProjectById(req.params.projectId);
+    const project = await ProjectService.getProjectById(req.params.id);
 
     return sendSuccess(res, project);
   }),
 
   updateProject: asyncHandler(async (req, res) => {
     const project = await ProjectService.updateProject(
-      req.params.projectId,
+      req.params.id,
       req.body as UpdateProjectInput,
     );
 

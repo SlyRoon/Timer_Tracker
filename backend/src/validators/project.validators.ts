@@ -2,8 +2,8 @@ import { z } from 'zod';
 import type { RequestValidationSchema } from '../middlewares/validate-request.middleware.js';
 import { objectIdSchema, requiredStringSchema } from './shared.schemas.js';
 
-const projectIdParamsSchema = z.object({
-  projectId: objectIdSchema,
+const idParamsSchema = z.object({
+  id: objectIdSchema,
 });
 
 const createProjectBodySchema = z.object({
@@ -23,10 +23,10 @@ export const createProjectSchema = {
 } satisfies RequestValidationSchema;
 
 export const getProjectByIdSchema = {
-  params: projectIdParamsSchema,
+  params: idParamsSchema,
 } satisfies RequestValidationSchema;
 
 export const updateProjectSchema = {
-  params: projectIdParamsSchema,
+  params: idParamsSchema,
   body: updateProjectBodySchema,
 } satisfies RequestValidationSchema;

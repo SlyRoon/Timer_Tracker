@@ -15,7 +15,7 @@ const startTimerBodySchema = z.object({
 
 const stopTimerBodySchema = z.object({
   endTime: optionalDateSchema,
-});
+}).default({});
 
 export const startTimerSchema = {
   body: startTimerBodySchema,
