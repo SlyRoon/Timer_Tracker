@@ -222,6 +222,175 @@
 
 ---
 
+## Entry 004 — Backend domain foundation
+
+- Entry number: Entry 004
+- Етап: Етап 2 — Backend domain foundation
+- Інструмент: Codex
+- Branch: `feat/backend-domain-foundation`
+- Ключовий промпт: Condensed version — працювати тільки в межах Етапу 2; створити backend domain foundation для Time Tracker: Mongoose models для `Project`, `TaskName`, `TimeEntry`, базові TypeScript domain types, MongoDB connection layer; не створювати repositories/services/controllers/routes для доменних фіч, не робити CRUD, timer, reports, CSV, frontend changes, Docker або deploy config; оновити `PROMPTS_LOG.md`, зробити commit і push у `feat/backend-domain-foundation`.
+- Original user prompt:
+  - Original prompt summary: Користувач попросив реалізувати тільки Етап 2 — backend domain foundation у branch `feat/backend-domain-foundation`: створити Mongoose schemas/models для `Project`, `TaskName`, `TimeEntry`, базові TypeScript contracts, MongoDB connection layer з `MONGODB_URI`, інтегрувати connection у backend bootstrap, не переходити до repositories/services/controllers/business endpoints, оновити prompt log, commit і push.
+  - Original prompt (verbatim excerpt):
+
+```md
+Поточна git branch:
+`feat/backend-domain-foundation`
+
+Працюй тільки в межах **Етапу 2 — Backend domain foundation**.
+Нову branch не створюй.
+Нічого не мердж.
+Не переходь до наступного етапу.
+
+Потрібно реалізувати **тільки backend domain foundation** для Time Tracker.
+
+На цьому етапі треба:
+- створити доменні моделі для:
+  - `Project`
+  - `TaskName`
+  - `TimeEntry`
+- створити Mongoose schemas
+- створити базові TypeScript types / interfaces / contracts, якщо вони потрібні
+- додати базовий MongoDB connection layer
+- підготувати backend до роботи з MongoDB
+- не заходити в repository layer
+- не заходити в service layer
+- не створювати бізнесові endpoints
+- автоматично оновити `PROMPTS_LOG.md`
+- зробити commit
+- зробити push
+
+На цьому етапі НЕ роби:
+- repositories logic
+- services logic
+- controllers logic для доменних фіч
+- routes для project/task/time entry фіч
+- Project CRUD
+- timer start/stop
+- today entries management
+- autocomplete endpoint
+- reports
+- CSV export
+- frontend changes, крім мінімальних типів якщо це абсолютно потрібно
+- Docker
+- deploy config
+- зайві бібліотеки
+
+Після змін виконай:
+1. `git status`
+2. `git add .`
+3. `git commit -m "feat: add backend domain models and mongo foundation"`
+4. `git push origin feat/backend-domain-foundation`
+```
+
+- Логіка: Створити базові Mongoose models, TypeScript domain types і MongoDB connection layer без переходу до repositories/services/controllers.
+- Результат: Backend готовий до наступного етапу — repository layer.
+- Змінені файли:
+  - `backend/src/models/project.model.ts`
+  - `backend/src/models/task-name.model.ts`
+  - `backend/src/models/time-entry.model.ts`
+  - `backend/src/shared/types/domain.types.ts`
+  - `backend/src/shared/database/mongo-connection.ts`
+  - `backend/package-lock.json`
+  - `backend/src/server.ts`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+  - `backend/src/models/.gitkeep`
+  - `backend/src/shared/.gitkeep`
+- Що перевірено:
+  - існують моделі `Project`, `TaskName`, `TimeEntry`
+  - є MongoDB connection layer
+  - health-check scaffold не зламано
+  - не додано repository/service/controller logic для доменних фіч
+  - backend dependencies встановлено
+  - `npm --prefix backend run build` виконано успішно
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; зміни виконані через Codex.
+
+---
+
+## Entry 005 — Repository layer
+
+- Entry number: Entry 005
+- Етап: Етап 3 — Repository layer
+- Інструмент: Codex
+- Branch: `feat/backend-repositories`
+- Порядок виконання: Entry 005
+- Ключовий промпт: Condensed version — працювати тільки в межах Етапу 3; створити repository layer для `Project`, `TaskName`, `TimeEntry`; ізолювати роботу з Mongoose models у repositories; додати data access methods для наступних етапів; не створювати services/controllers/routes/business endpoints, frontend changes, Docker або deploy config; оновити `PROMPTS_LOG.md`, зробити commit і push у `feat/backend-repositories`.
+- Original user prompt:
+  - Original prompt summary: Користувач попросив реалізувати тільки Етап 3 — Repository layer у branch `feat/backend-repositories`: створити repositories для `Project`, `TaskName`, `TimeEntry`, ізолювати доступ до Mongoose models, підготувати methods для Project CRUD, autocomplete, timer/today entries/reports без service/controller/route/business logic, оновити prompt log з original prompt, виконати backend build, commit і push.
+  - Original prompt (verbatim excerpt):
+
+```md
+Спочатку прочитай `AI_WORKFLOW.md` і `PROMPTS_LOG.md` у корені проєкту та суворо дотримуйся їх.
+
+Поточна git branch:
+`feat/backend-repositories`
+
+Працюй тільки в межах **Етапу 3 — Repository layer**.
+Нову branch не створюй.
+Нічого не мердж.
+Не переходь до наступного етапу.
+
+Потрібно реалізувати **тільки repository layer** для backend Time Tracker.
+
+На цьому етапі треба:
+- створити repositories для:
+  - `Project`
+  - `TaskName`
+  - `TimeEntry`
+- ізолювати всю роботу з Mongoose models у repository layer
+- додати методи, які знадобляться на наступних етапах
+- не переходити в service layer
+- не переходити в controller layer
+- не створювати бізнесові HTTP endpoints
+- автоматично оновити `PROMPTS_LOG.md`
+- зробити commit
+- зробити push
+
+На цьому етапі НЕ роби:
+- services logic
+- controllers logic
+- routes для feature endpoints
+- Project CRUD на HTTP-рівні
+- timer start/stop business flow
+- today entries business flow
+- autocomplete business flow
+- reports
+- CSV export
+- frontend changes
+- Docker
+- deploy config
+- зайві бібліотеки
+
+Після змін виконай:
+1. `git status`
+2. `git add .`
+3. `git commit -m "feat: add backend repository layer"`
+4. `git push origin feat/backend-repositories`
+```
+
+- Логіка: Винести всю роботу з Mongoose models у repository layer і підготувати базові data access methods для projects, task names і time entries.
+- Результат: Backend готовий до наступного етапу — service layer.
+- Змінені файли:
+  - `backend/src/repositories/project.repository.ts`
+  - `backend/src/repositories/task-name.repository.ts`
+  - `backend/src/repositories/time-entry.repository.ts`
+  - `backend/src/repositories/index.ts`
+  - `backend/src/shared/types/repository.types.ts`
+  - `backend/src/repositories/.gitkeep`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - створено `ProjectRepository`
+  - створено `TaskNameRepository`
+  - створено `TimeEntryRepository`
+  - models використовуються через repository layer
+  - не додано services/controllers/routes для доменних фіч
+  - backend build не зламано
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; зміни виконані через Codex.
+
+---
+
 ## Template for next entries
 
 ```md
