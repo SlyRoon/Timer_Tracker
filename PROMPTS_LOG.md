@@ -1,73 +1,94 @@
 # PROMPTS_LOG.md
 
-## Призначення
-Цей файл містить ключові промпти по етапах розробки Time Tracker у форматі AI-first workflow.
-Лог містить тільки великі кроки та важливі follow-up промпти, без мікрологу дрібних змін.
+Цей файл фіксує тільки ключові етапи AI-first розробки проєкту **Time Tracker**.
+
+Мікролог дрібних правок не ведеться. Якщо в межах того самого етапу є невелике уточнення без зміни scope, окремий entry не створюється. Після кожного важливого етапу журнал оновлюється, щоб було видно, який prompt запустив зміни, яка логіка була застосована і які файли були змінені.
+
+---
+
+## Entry 000 — Rules and workflow setup
+
+- Етап: Етап 0 — Rules and workflow setup
+- Інструмент: Codex
+- Branch: `chore/project-scaffold`
+- Порядок виконання: Entry 000
+- Ключовий промпт: Condensed version — працювати тільки над Етапом 0; перевірити й оновити `AI_WORKFLOW.md`; створити або оновити `PROMPTS_LOG.md`; створити або оновити ранній `README.md`; зафіксувати стек, архітектурні правила, workflow, список етапів, формат логування, старт без Docker і правило окремих git branches для великих фіч; не створювати scaffold, код застосунку, Docker, `.env.example`, `frontend/` або `backend/`.
+- Логіка: Зафіксували стек, правила backend/frontend архітектури, AI-first workflow, список етапів і формат логування prompt. Обмежили поточний крок тільки foundation-документацією без переходу до Етапу 1.
+- Результат: Створено основу для подальшої покрокової AI-розробки без хаосу.
+- Змінені файли:
+  - `AI_WORKFLOW.md`
+  - `PROMPTS_LOG.md`
+  - `README.md`
+- Що перевірено:
+  - існує `AI_WORKFLOW.md`
+  - існує `PROMPTS_LOG.md`
+  - існує `README.md`
+  - визначено етапи
+  - визначено правила workflow
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; зміни виконані через Codex у межах Етапу 0.
 
 ---
 
 ## Entry 001 — Project scaffold
 
-**Етап:** Фаза 1 — Scaffold  
-**Інструмент:** Codex  
-**Branch:** `chore/project-scaffold`
-
-### Ключовий промпт
-Створи тільки scaffold для fullstack Time Tracker згідно з AI_WORKFLOW.md.
-
-Потрібно:
-- створити `frontend/` на React + TypeScript + Vite + TailwindCSS
-- створити `backend/` на Node.js + Express + TypeScript
-- додати базову структуру папок без бізнес-логіки
-- створити root-файли:
+- Етап: Етап 1 — Project scaffold
+- Інструмент: Codex
+- Branch: `chore/project-scaffold`
+- Порядок виконання: Entry 001
+- Ключовий промпт: Condensed version — працювати тільки над Етапом 1; створити `frontend/` і `backend/`; додати базові TypeScript/Vite/Tailwind/Express конфіги; додати root support files `.gitignore` і `.env.example`; створити placeholder structure; додати `GET /api/health`; не робити бізнес-логіку, CRUD, timer, reports, CSV export, MongoDB connection, Docker або deploy config; оновити `PROMPTS_LOG.md`.
+- Логіка: Створити каркас frontend/backend, root support files і базову структуру без бізнес-логіки. Frontend отримує мінімальний Vite + React + Tailwind setup, backend отримує Express bootstrap із `/api` prefix і health endpoint.
+- Результат: Створено стартовий scaffold fullstack проєкту.
+- Змінені файли:
+  - `.gitignore`
+  - `.env.example`
   - `README.md`
   - `PROMPTS_LOG.md`
-  - `.env.example`
-- додати базовий Express bootstrap
-- додати TypeScript configs
-- додати placeholder structure для layered backend architecture:
-  - routes
-  - controllers
-  - services
-  - repositories
-  - models
-  - middlewares
-  - validators
-  - shared
-- додати placeholder structure для frontend architecture:
-  - pages
-  - components
-  - features
-  - hooks
-  - api
-  - types
-  - utils
-  - shared
-- не реалізовувати бізнес-логіку
-- після завершення покажи структуру створених файлів
+  - `frontend/package.json`
+  - `frontend/tsconfig.json`
+  - `frontend/vite.config.ts`
+  - `frontend/tailwind.config.js`
+  - `frontend/postcss.config.js`
+  - `frontend/index.html`
+  - `frontend/src/main.tsx`
+  - `frontend/src/App.tsx`
+  - `frontend/src/index.css`
+  - `backend/package.json`
+  - `backend/tsconfig.json`
+  - `backend/src/app.ts`
+  - `backend/src/server.ts`
+  - `backend/src/routes/health.routes.ts`
+  - `backend/src/controllers/health.controller.ts`
+- Що перевірено:
+  - frontend scaffold створено
+  - backend scaffold створено
+  - health endpoint додано
+  - Tailwind setup додано
+  - `.gitignore` перевірено
+  - `.env.example` створено або оновлено
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; зміни виконані через Codex у межах Етапу 1.
+- Follow-up prompts:
+  - Користувач уточнив, що Codex має коментувати хід роботи та оновлювати відповідний entry у `PROMPTS_LOG.md`, а не залишати це як усну домовленість.
+  - Користувач уточнив, що Codex має самостійно робити логічні git commits після завершення етапу, а не тільки показувати команди для ручного виконання.
 
-### Логіка
-Починаємо з базового каркасу, щоб далі окремими фазами добудовувати models, repositories, services, controllers, routes і frontend UI без хаосу в структурі.
+---
 
-### Результат
-Створено базовий monorepo-style scaffold для frontend і backend, готовий до наступних фаз реалізації.
+## Template for next entries
 
-### Змінені / створені файли
-- `AI_WORKFLOW.md`
-- `PROMPTS_LOG.md`
-- `README.md`
-- `.env.example`
-- `frontend/...`
-- `backend/...`
+```md
+## Entry XXX — Short title
 
-### Що перевірено
-- існує коренева структура проєкту
-- існують `frontend/` і `backend/`
-- на бекенді є багатошарова placeholder-структура
-- на фронтенді є розділення на pages/components/features/hooks/api/types/utils/shared
-- бізнес-логіка ще не реалізована
-
-### Мінімальні ручні правки
-- заповнення `AI_WORKFLOW.md`
-- стартове заповнення `PROMPTS_LOG.md`
-- стартове заповнення `README.md`
+- Етап:
+- Інструмент:
+- Branch:
+- Дата або порядок виконання:
+- Ключовий промпт:
+- Логіка:
+- Результат:
+- Змінені файли:
+  - `path/to/file`
+- Що перевірено:
+  - ...
+- Мінімальні ручні правки:
+- Follow-up prompts:
+  - ...
+```
