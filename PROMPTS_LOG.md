@@ -222,6 +222,34 @@
 
 ---
 
+## Entry 004 — Sync scaffold branch into main
+
+- Entry number: Entry 004
+- Етап: Git workflow follow-up — sync scaffold changes into `main`
+- Інструмент: Codex
+- Branch: `main`
+- Ключовий промпт: Перейти на `main`, підтягнути актуальні зміни та перенести всі зміни з `chore/project-scaffold`, бо після pull request користувач бачить порожній `main`.
+- Original user prompt:
+
+```md
+перейди на мейн и вытяни все изменения из другой ветки я сделал пул реквест но почемуто в мейне пусто
+```
+
+- Логіка: Перевірити поточну branch, підтягнути `origin/main`, порівняти `main` з `chore/project-scaffold`, виконати merge-перевірку і зафіксувати результат у `PROMPTS_LOG.md`.
+- Результат: Локальний `main` був старим; `git pull origin main` fast-forward підтягнув merge commit pull request #1. Після цього `git merge chore/project-scaffold` показав `Already up to date`, тобто `main` уже містить scaffold-зміни.
+- Змінені файли:
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - прочитано `AI_WORKFLOW.md`
+  - прочитано `PROMPTS_LOG.md`
+  - поточна branch після переходу/перевірки: `main`
+  - `origin/main` підтягнуто
+  - `main` містить зміни з `chore/project-scaffold`
+  - `git merge chore/project-scaffold` повернув `Already up to date`
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; зміни виконані через Codex.
+
+---
+
 ## Template for next entries
 
 ```md
