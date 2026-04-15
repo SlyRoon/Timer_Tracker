@@ -485,6 +485,124 @@
 
 ---
 
+## Entry 007 — Controllers, validators, and middlewares
+
+- Entry number: Entry 007
+- Етап: Етап 5 — Controllers + validators + middlewares
+- Інструмент: Codex
+- Branch: `feat/backend-controllers`
+- Порядок виконання: Entry 007
+- Ключовий промпт: Condensed version — завершити lifecycle `feat/backend-services`, підтягнути `main`, переконатися що service layer merged, видалити local/remote `feat/backend-services`, створити `feat/backend-controllers`; реалізувати тільки Етап 5: thin controllers поверх services, Zod validators для body/params/query, validation/async/error middlewares, unified response style; не створювати feature routes, не підключати feature endpoints, не лізти у frontend/Docker, оновити README і `PROMPTS_LOG.md`, виконати backend build, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач попросив після завершеного `feat/backend-services` перейти до Етапу 5. Перед реалізацією потрібно виконати git flow: перевірити branch і clean working tree, перейти в `main`, зробити `git pull origin main`, переконатися що main містить service layer, видалити local/remote `feat/backend-services`, створити `feat/backend-controllers`. Далі реалізувати тільки backend controllers, validators і middlewares: тонкі controllers, Zod validation schemas, validation middleware, async wrapper, global error handler з mapping `ServiceError` у HTTP statuses, unified success/error responses, без routes wiring, frontend, Docker або нової бізнес-логіки в controllers.
+  - Original prompt (verbatim excerpt):
+
+```md
+Попередній етап уже завершено:
+`feat/backend-services`
+
+Важливо:
+- service layer уже реалізований і був змерджений у `main`
+- наступний етап: **Етап 5 — Controllers + validators + middlewares**
+- потрібно реалізувати тільки цей етап
+- не переходити до routes wiring
+- не лізти у frontend
+- не додавати Docker
+- не додавати нову бізнес-логіку в controllers
+
+Перед початком роботи ОБОВ’ЯЗКОВО виконай git flow для переходу до нового етапу.
+
+Виконай послідовно:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Переконайся, що `main` актуальний і містить зміни з `feat/backend-services`
+6. Якщо локальна branch `feat/backend-services` існує і вже merged, видали її
+7. Спробуй видалити remote branch
+8. Створи нову branch:
+   `feat/backend-controllers`
+9. Переключись у неї
+10. Тільки після цього починай реалізацію Етапу 5
+
+Потрібно реалізувати **тільки backend controllers + validators + middlewares** для Time Tracker.
+
+Controllers повинні працювати **тільки через service layer**.
+
+Створи validators / schemas для запитів.
+Очікувані групи валідації:
+- projects
+- timer
+- today entries
+- task autocomplete
+- reports
+
+Має бути:
+- middleware для валідації через Zod
+- базовий async wrapper або інший чистий спосіб обробки async controller errors
+- глобальний error handler
+- мапінг `ServiceError` -> HTTP status codes
+
+Не можна:
+- створювати feature routes
+- підключати route modules для доменних фіч в `app.ts`
+- реалізовувати route wiring
+- лізти у frontend
+- переносити бізнес-логіку назад у controllers
+- робити CSV export
+
+Після завершення:
+1. виконай `git status`
+2. переконайся, що зміни логічні й стосуються тільки Етапу 5
+3. виконай build backend
+4. якщо build падає — виправ помилки
+5. `git add .`
+6. `git commit -m "feat: add backend controllers and validation layer"`
+7. `git push origin feat/backend-controllers`
+```
+
+- Логіка: Створити чистий HTTP layer поверх service layer: controllers не містять бізнес-логіки, validators відповідають за Zod validation, middlewares дають validation/async/error handling, response helper уніфікує success/error responses.
+- Результат: Backend готовий до наступного етапу — routes wiring, без підключених feature endpoints.
+- Змінені файли:
+  - `backend/src/app.ts`
+  - `backend/src/controllers/health.controller.ts`
+  - `backend/src/controllers/project.controller.ts`
+  - `backend/src/controllers/time-tracking.controller.ts`
+  - `backend/src/controllers/today-entries.controller.ts`
+  - `backend/src/controllers/task-autocomplete.controller.ts`
+  - `backend/src/controllers/reports.controller.ts`
+  - `backend/src/controllers/index.ts`
+  - `backend/src/validators/project.validators.ts`
+  - `backend/src/validators/timer.validators.ts`
+  - `backend/src/validators/today-entries.validators.ts`
+  - `backend/src/validators/task-autocomplete.validators.ts`
+  - `backend/src/validators/reports.validators.ts`
+  - `backend/src/validators/shared.schemas.ts`
+  - `backend/src/validators/index.ts`
+  - `backend/src/middlewares/validate-request.middleware.ts`
+  - `backend/src/middlewares/async-handler.middleware.ts`
+  - `backend/src/middlewares/error-handler.middleware.ts`
+  - `backend/src/middlewares/index.ts`
+  - `backend/src/shared/http/responses.ts`
+  - `backend/src/middlewares/.gitkeep`
+  - `backend/src/validators/.gitkeep`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - `main` актуальний і містить service layer
+  - local branch `feat/backend-services` видалено після merge
+  - remote branch `feat/backend-services` видалено
+  - створено branch `feat/backend-controllers`
+  - створено controllers для projects, time tracking, today entries, autocomplete і reports
+  - створено Zod validators для потрібних request groups
+  - створено validation middleware, async wrapper і global error handler
+  - додано unified response helper
+  - routes wiring для feature endpoints не реалізовано
+  - backend build не зламано
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; зміни виконані через Codex.
+
+---
+
 ## Template for next entries
 
 ```md
