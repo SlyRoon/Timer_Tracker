@@ -72,6 +72,65 @@
 
 ---
 
+## Entry 002 — Mandatory prompt logging, commit, and push workflow
+
+- Entry number: Entry 002
+- Етап: Workflow rules update — mandatory prompt logging, commit, and push
+- Інструмент: Codex
+- Branch: `chore/project-scaffold`
+- Ключовий промпт: Зафіксувати обов'язковий режим роботи AI-агента: після кожного виконаного prompt оновлювати `PROMPTS_LOG.md`, зберігати original user prompt, самостійно виконувати `git add`, `git commit`, `git push` у поточну branch і показувати результат push.
+- Original user prompt:
+  - Original prompt summary: Користувач уточнив, що Codex має працювати як AI-агент з повним циклом завершення задачі: читати workflow files, оновлювати prompt log після кожного prompt, записувати original user prompt, самостійно commit-ити і push-ити зміни в поточну branch, а у фінальній відповіді показувати `PROMPTS_LOG.md`, commit, push і перевірки.
+  - Original prompt (verbatim excerpt):
+
+```md
+Спочатку прочитай `AI_WORKFLOW.md` і `PROMPTS_LOG.md` у корені проєкту та суворо дотримуйся їх.
+
+Ти працюєш не просто як генератор коду, а як AI-агент, який зобов’язаний:
+1. виконати поточний етап
+2. самостійно оновити `PROMPTS_LOG.md`
+3. самостійно зробити git add
+4. самостійно зробити git commit
+5. самостійно зробити git push у поточну branch
+6. наприкінці показати, що саме було запушено
+
+Після кожного виконаного мною промпта ти ОБОВ’ЯЗКОВО оновлюєш `PROMPTS_LOG.md`.
+У `PROMPTS_LOG.md` ти ОБОВ’ЯЗКОВО зберігаєш:
+- назву етапу
+- branch
+- коротку логіку
+- результат
+- змінені файли
+- що перевірено
+- мінімальні ручні правки
+- і головне: **оригінальний user prompt, який я тобі надіслав**
+
+Ти НЕ маєш права завершити задачу без оновлення `PROMPTS_LOG.md`.
+Ти НЕ маєш права завершити задачу без спроби `git commit`.
+Ти НЕ маєш права завершити задачу без спроби `git push`.
+
+Після внесення змін виконай:
+- `git status`
+- `git add .`
+- `git commit -m "<логічний commit message>"`
+- `git push origin <current-branch>`
+```
+
+- Логіка: Оновити workflow contract у `AI_WORKFLOW.md` і додати новий запис у `PROMPTS_LOG.md`, щоб future prompts мали обов'язковий audit trail з original prompt, commit і push спробою.
+- Результат: Правила ведення prompt log і git-завершення задачі зафіксовано в проєктній документації.
+- Змінені файли:
+  - `AI_WORKFLOW.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - прочитано `AI_WORKFLOW.md`
+  - прочитано `PROMPTS_LOG.md`
+  - визначено поточну branch `chore/project-scaffold`
+  - перед змінами working tree був чистий
+  - додано новий entry з полем `Original user prompt`
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; зміни виконані через Codex.
+
+---
+
 ## Template for next entries
 
 ```md
@@ -82,6 +141,7 @@
 - Branch:
 - Дата або порядок виконання:
 - Ключовий промпт:
+- Original user prompt:
 - Логіка:
 - Результат:
 - Змінені файли:
