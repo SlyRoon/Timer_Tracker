@@ -1,4 +1,4 @@
-import { Schema, model, models, type HydratedDocument, type Model } from 'mongoose';
+import mongoose, { Schema, type HydratedDocument, type Model } from 'mongoose';
 import type { TaskNameFields } from '../shared/types/domain.types.js';
 
 export type TaskNameDocument = HydratedDocument<TaskNameFields>;
@@ -24,5 +24,5 @@ const taskNameSchema = new Schema<TaskNameFields>(
 taskNameSchema.index({ value: 1 });
 
 export const TaskNameModel =
-  (models.TaskName as Model<TaskNameFields> | undefined) ??
-  model<TaskNameFields>('TaskName', taskNameSchema);
+  (mongoose.models.TaskName as Model<TaskNameFields> | undefined) ??
+  mongoose.model<TaskNameFields>('TaskName', taskNameSchema);

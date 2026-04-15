@@ -22,7 +22,7 @@ export const TodayEntriesController = {
   updateTaskName: asyncHandler(async (req, res) => {
     const timeEntry = await TodayEntriesService.updateTaskName({
       ...(req.body as Omit<UpdateEntryTaskNameInput, 'entryId'>),
-      entryId: req.params.entryId,
+      entryId: req.params.id,
     });
 
     return sendSuccess(res, timeEntry);
@@ -31,7 +31,7 @@ export const TodayEntriesController = {
   updateProject: asyncHandler(async (req, res) => {
     const timeEntry = await TodayEntriesService.updateProject({
       ...(req.body as Omit<UpdateEntryProjectInput, 'entryId'>),
-      entryId: req.params.entryId,
+      entryId: req.params.id,
     });
 
     return sendSuccess(res, timeEntry);
@@ -40,14 +40,14 @@ export const TodayEntriesController = {
   updateManualTime: asyncHandler(async (req, res) => {
     const timeEntry = await TodayEntriesService.updateManualTime({
       ...(req.body as Omit<UpdateEntryManualTimeInput, 'entryId'>),
-      entryId: req.params.entryId,
+      entryId: req.params.id,
     });
 
     return sendSuccess(res, timeEntry);
   }),
 
   deleteEntry: asyncHandler(async (req, res) => {
-    const timeEntry = await TodayEntriesService.deleteEntry(req.params.entryId);
+    const timeEntry = await TodayEntriesService.deleteEntry(req.params.id);
 
     return sendSuccess(res, timeEntry);
   }),

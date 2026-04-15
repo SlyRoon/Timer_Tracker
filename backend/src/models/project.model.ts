@@ -1,4 +1,4 @@
-import { Schema, model, models, type HydratedDocument, type Model } from 'mongoose';
+import mongoose, { Schema, type HydratedDocument, type Model } from 'mongoose';
 import type { ProjectFields } from '../shared/types/domain.types.js';
 
 export type ProjectDocument = HydratedDocument<ProjectFields>;
@@ -22,5 +22,5 @@ const projectSchema = new Schema<ProjectFields>(
 );
 
 export const ProjectModel =
-  (models.Project as Model<ProjectFields> | undefined) ??
-  model<ProjectFields>('Project', projectSchema);
+  (mongoose.models.Project as Model<ProjectFields> | undefined) ??
+  mongoose.model<ProjectFields>('Project', projectSchema);

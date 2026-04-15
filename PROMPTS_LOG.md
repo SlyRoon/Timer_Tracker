@@ -603,6 +603,106 @@ Controllers повинні працювати **тільки через service 
 
 ---
 
+## Entry 008 — Routes wiring
+
+- Entry number: Entry 008
+- Етап: Етап 6 — Routes wiring
+- Інструмент: Codex
+- Branch: `feat/backend-routes`
+- Порядок виконання: Entry 008
+- Ключовий промпт: Condensed version — завершити lifecycle `feat/backend-controllers`, підтягнути `main`, переконатися що controllers merged, видалити local/remote `feat/backend-controllers`, створити `feat/backend-routes`; реалізувати тільки Етап 6: створити feature route modules для projects, timer, time entries, task names і reports, підключити validators/middlewares/controllers, зареєструвати routes у `app.ts`, не додавати бізнес-логіку, frontend, Docker або CSV export; оновити README і `PROMPTS_LOG.md`, виконати backend build, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач попросив закрити lifecycle `feat/backend-controllers`, створити `feat/backend-routes` і реалізувати тільки Етап 6 — routes wiring. Потрібно створити окремі route modules для projects, timer, time entries, task names і reports; підключити існуючі controllers, validators і middlewares; зареєструвати feature routes в `app.ts`; залишити health route; не додавати нову бізнес-логіку, frontend changes, Docker, deploy config або CSV export; оновити prompt log з original prompt, README, виконати backend build, commit і push.
+  - Original prompt (verbatim excerpt):
+
+```md
+Попередній етап уже завершено:
+`feat/backend-controllers`
+
+Наступний етап:
+**Етап 6 — Routes wiring**
+
+Потрібно:
+1. завершити git lifecycle для попередньої branch
+2. перейти до нового етапу
+3. виконати тільки **Етап 6 — Routes wiring**
+
+Перед початком роботи ти ОБОВ’ЯЗКОВО повинен сам пройти git flow для попередньої feature branch.
+
+Виконай послідовно:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Переконайся, що `main` актуальний і містить зміни з `feat/backend-controllers`
+6. Якщо локальна branch `feat/backend-controllers` існує і вже merged, видали її
+7. Спробуй видалити remote branch
+8. Створи нову branch:
+   - `feat/backend-routes`
+9. Переключись у неї
+10. Тільки після цього починай Етап 6
+
+Потрібно реалізувати **тільки backend routes wiring** для Time Tracker.
+
+На цьому етапі треба:
+- створити route modules для всіх основних feature groups
+- підключити controllers
+- підключити validators / middlewares
+- зареєструвати routes у `app.ts`
+- зберегти чистий HTTP flow:
+  `route -> controller -> service -> repository -> model`
+- не лізти у frontend
+- не додавати нову бізнес-логіку
+
+Потрібні окремі route files:
+1. `projects.routes.ts`
+2. `timer.routes.ts`
+3. `time-entries.routes.ts`
+4. `task-names.routes.ts`
+5. `reports.routes.ts`
+
+Після змін виконай:
+1. `git status`
+2. `git add .`
+3. `git commit -m "feat: wire backend feature routes"`
+4. `git push origin feat/backend-routes`
+```
+
+- Логіка: Підключити feature routes, validators, controllers і app-level route registration без додавання нової бізнес-логіки.
+- Результат: Backend готовий до наступного етапу — Project CRUD через вже підключені routes.
+- Змінені файли:
+  - `backend/src/app.ts`
+  - `backend/src/routes/projects.routes.ts`
+  - `backend/src/routes/timer.routes.ts`
+  - `backend/src/routes/time-entries.routes.ts`
+  - `backend/src/routes/task-names.routes.ts`
+  - `backend/src/routes/reports.routes.ts`
+  - `backend/src/routes/index.ts`
+  - `backend/src/controllers/project.controller.ts`
+  - `backend/src/controllers/today-entries.controller.ts`
+  - `backend/src/models/project.model.ts`
+  - `backend/src/models/task-name.model.ts`
+  - `backend/src/models/time-entry.model.ts`
+  - `backend/src/validators/project.validators.ts`
+  - `backend/src/validators/timer.validators.ts`
+  - `backend/src/validators/today-entries.validators.ts`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - `main` актуальний і містить controllers layer
+  - local branch `feat/backend-controllers` видалено після merge
+  - remote branch `feat/backend-controllers` видалено
+  - створено branch `feat/backend-routes`
+  - створено feature route modules
+  - feature routes підключено в `app.ts`
+  - validators і middlewares підключені
+  - health route не зламано
+  - backend build не зламано
+  - app bootstrap import перевірено після build
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; зміни виконані через Codex.
+
+---
+
 ## Template for next entries
 
 ```md

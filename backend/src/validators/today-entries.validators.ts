@@ -7,8 +7,8 @@ import {
   requiredStringSchema,
 } from './shared.schemas.js';
 
-const entryIdParamsSchema = z.object({
-  entryId: objectIdSchema,
+const idParamsSchema = z.object({
+  id: objectIdSchema,
 });
 
 const todayEntriesQuerySchema = z.object({
@@ -46,20 +46,20 @@ export const getTodayEntriesSchema = {
 } satisfies RequestValidationSchema;
 
 export const updateEntryTaskNameSchema = {
-  params: entryIdParamsSchema,
+  params: idParamsSchema,
   body: updateEntryTaskNameBodySchema,
 } satisfies RequestValidationSchema;
 
 export const updateEntryProjectSchema = {
-  params: entryIdParamsSchema,
+  params: idParamsSchema,
   body: updateEntryProjectBodySchema,
 } satisfies RequestValidationSchema;
 
 export const updateManualTimeSchema = {
-  params: entryIdParamsSchema,
+  params: idParamsSchema,
   body: updateManualTimeBodySchema,
 } satisfies RequestValidationSchema;
 
 export const deleteEntrySchema = {
-  params: entryIdParamsSchema,
+  params: idParamsSchema,
 } satisfies RequestValidationSchema;
