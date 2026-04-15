@@ -18,5 +18,10 @@ export interface DateRange {
   to: Date;
 }
 
-export type TimeEntryCreateInput = TimeEntryFields;
-export type TimeEntryUpdateInput = Partial<TimeEntryFields>;
+export type TimeEntryCreateInput = Omit<TimeEntryFields, 'projectId'> & {
+  projectId: EntityId;
+};
+
+export type TimeEntryUpdateInput = Partial<Omit<TimeEntryFields, 'projectId'>> & {
+  projectId?: EntityId;
+};

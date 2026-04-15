@@ -391,6 +391,100 @@
 
 ---
 
+## Entry 006 — Service layer
+
+- Entry number: Entry 006
+- Етап: Етап 4 — Service layer
+- Інструмент: Codex
+- Branch: `feat/backend-services`
+- Порядок виконання: Entry 006
+- Ключовий промпт: Condensed version — спочатку завершити lifecycle branch `feat/backend-repositories`: switch to `main`, pull, merge, push, delete local/remote branch, створити `feat/backend-services`; потім працювати тільки над Етапом 4, створити service layer поверх repositories для projects, time tracking, today entries, autocomplete і reports; не створювати controllers/routes/HTTP endpoints/frontend/Docker; оновити `PROMPTS_LOG.md`, виконати backend build, commit і push у `feat/backend-services`.
+- Original user prompt:
+  - Original prompt summary: Користувач попросив закрити попередню feature branch через повний git lifecycle, створити нову branch `feat/backend-services` і реалізувати тільки Етап 4 — Service layer. Потрібно додати project, time tracking, today entries, task autocomplete і reports services поверх repositories, винести бізнес-логіку в services, не додавати controllers/routes/HTTP endpoints/frontend/Docker, оновити prompt log з original prompt, виконати backend build, commit і push.
+  - Original prompt (verbatim excerpt):
+
+```md
+Поточна завершена feature branch:
+`feat/backend-repositories`
+
+Потрібно:
+1. завершити branch lifecycle для попереднього етапу
+2. перейти до нового етапу
+3. виконати тільки **Етап 4 — Service layer**
+
+Перед початком роботи над новим етапом ти ОБОВ’ЯЗКОВО повинен сам пройти git flow для попередньої feature branch.
+
+Виконай послідовно:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Змерджи `feat/backend-repositories` у `main`
+6. Виконай `git push origin main`
+7. Видали локальну branch:
+   `git branch -d feat/backend-repositories`
+8. Спробуй видалити remote branch:
+   `git push origin --delete feat/backend-repositories`
+9. Створи нову branch:
+   `feat/backend-services`
+10. Переключись у неї і тільки після цього починай Етап 4
+
+Потрібно реалізувати **тільки service layer** для backend Time Tracker.
+
+На цьому етапі треба:
+- створити service layer поверх уже існуючих repositories
+- винести в services усю бізнес-логіку
+- не створювати controllers
+- не створювати routes
+- не створювати HTTP endpoints
+- не лізти у frontend
+- автоматично оновити `PROMPTS_LOG.md`
+- зробити commit
+- зробити push
+
+Очікуваний підхід:
+- `project.service.ts`
+- `time-tracking.service.ts`
+- `today-entries.service.ts`
+- `task-autocomplete.service.ts`
+- `reports.service.ts`
+
+Після змін виконай:
+1. `git status`
+2. `git add .`
+3. `git commit -m "feat: add backend service layer"`
+4. `git push origin feat/backend-services`
+```
+
+- Логіка: Створити service layer поверх repositories і винести бізнес-логіку для projects, time tracking, today entries, autocomplete та reports.
+- Результат: Backend готовий до наступного етапу — controllers + validators + middlewares.
+- Змінені файли:
+  - `backend/src/services/project.service.ts`
+  - `backend/src/services/time-tracking.service.ts`
+  - `backend/src/services/today-entries.service.ts`
+  - `backend/src/services/task-autocomplete.service.ts`
+  - `backend/src/services/reports.service.ts`
+  - `backend/src/services/service.helpers.ts`
+  - `backend/src/services/index.ts`
+  - `backend/src/services/.gitkeep`
+  - `backend/src/shared/errors/service-error.ts`
+  - `backend/src/shared/types/service.types.ts`
+  - `backend/src/shared/types/repository.types.ts`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - завершено merge lifecycle для `feat/backend-repositories`
+  - створено `ProjectService`
+  - створено `TimeTrackingService`
+  - створено `TodayEntriesService`
+  - створено `TaskAutocompleteService`
+  - створено `ReportsService`
+  - не додано controllers/routes для доменних фіч
+  - backend build не зламано
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; зміни виконані через Codex.
+
+---
+
 ## Template for next entries
 
 ```md
