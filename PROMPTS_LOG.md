@@ -131,6 +131,97 @@
 
 ---
 
+## Entry 003 — Project scaffold verification and completion
+
+- Entry number: Entry 003
+- Етап: Етап 1 — Project scaffold
+- Інструмент: Codex
+- Branch: `chore/project-scaffold`
+- Ключовий промпт: Condensed version — працювати тільки в межах Етапу 1; перевірити або створити стартовий fullstack scaffold для Time Tracker; забезпечити `frontend/`, `backend/`, `.gitignore`, `.env.example`, React + TypeScript + Vite + TailwindCSS setup, Node.js + Express + TypeScript setup, placeholder-структуру, стартовий frontend екран і `GET /api/health`; не робити бізнес-логіку, CRUD, timer, reports, CSV, Docker або deploy config; оновити `PROMPTS_LOG.md`, зробити commit і push у `chore/project-scaffold`.
+- Original user prompt:
+  - Original prompt summary: Користувач повторно запустив Етап 1 і вимагав повного агентського завершення: прочитати workflow files, працювати тільки в branch `chore/project-scaffold`, створити або перевірити scaffold frontend/backend/root files, не переходити до наступного етапу, записати original prompt у `PROMPTS_LOG.md`, виконати `git status`, `git add .`, `git commit` і `git push origin chore/project-scaffold`.
+  - Original prompt (verbatim excerpt):
+
+```md
+Спочатку прочитай `AI_WORKFLOW.md` і `PROMPTS_LOG.md` у корені проєкту та суворо дотримуйся їх.
+
+Поточна git branch:
+`chore/project-scaffold`
+
+Працюй тільки в межах **Етапу 1 — Project scaffold**.
+Нову branch не створюй.
+Нічого не мердж.
+Не переходь до наступного етапу.
+
+Після виконання ти ОБОВ’ЯЗКОВО повинен:
+1. самостійно оновити `PROMPTS_LOG.md`
+2. записати в `PROMPTS_LOG.md` саме той user prompt, який я тобі надіслав для цього запуску
+3. виконати `git status`
+4. виконати `git add .`
+5. виконати `git commit -m "<логічний commit message>"`
+6. виконати `git push origin chore/project-scaffold`
+
+Потрібно створити **тільки стартовий scaffold** для fullstack проєкту Time Tracker.
+
+На цьому етапі треба:
+- створити `frontend/`
+- створити `backend/`
+- створити або оновити `.gitignore`
+- створити `.env.example`
+- додати базові конфіги
+- налаштувати frontend на React + TypeScript + Vite + TailwindCSS
+- налаштувати backend на Node.js + Express + TypeScript
+- створити placeholder-структуру папок
+- зробити базовий frontend стартовий екран
+- зробити базовий backend health-check endpoint
+- автоматично оновити `PROMPTS_LOG.md`
+- зробити commit
+- зробити push
+
+На цьому етапі НЕ роби:
+- бізнес-логіку
+- Project CRUD
+- timer start/stop
+- today entries logic
+- task autocomplete
+- reports
+- CSV export
+- справжні доменні use-cases
+- реальні mongoose models
+- repositories logic
+- services logic
+- controllers logic для фіч
+- Docker
+- deploy config
+- зайві бібліотеки
+- зайві файли без потреби
+
+Після змін виконай:
+1. `git status`
+2. `git add .`
+3. `git commit -m "chore: scaffold frontend and backend apps"`
+4. `git push origin chore/project-scaffold`
+```
+
+- Логіка: Перевірити наявний scaffold Етапу 1, не дублювати вже створені файли, не додавати бізнес-логіку, зафіксувати поточний prompt у журналі та завершити цикл git commit/push.
+- Результат: Scaffold Етапу 1 перевірено: frontend/backend/root support files уже створені й відповідають вимогам; додаткових scaffold-файлів не потрібно. Prompt log оновлено для цього запуску.
+- Змінені файли:
+  - `AI_WORKFLOW.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - frontend scaffold створено
+  - backend scaffold створено
+  - health endpoint додано
+  - Tailwind setup додано
+  - `.gitignore` перевірено
+  - `.env.example` створено
+  - поточна branch `chore/project-scaffold`
+  - не створено нову branch
+  - не додано бізнес-логіку, Docker або deploy config
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; зміни виконані через Codex.
+
+---
+
 ## Template for next entries
 
 ```md
