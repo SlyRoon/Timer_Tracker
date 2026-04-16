@@ -44,6 +44,12 @@ export interface TaskSuggestionQuery {
   limit?: number;
 }
 
+export interface TaskNameSuggestion {
+  id: string;
+  value: string;
+  lastUsedAt: Date;
+}
+
 export interface ReportRequest {
   date?: Date;
 }
