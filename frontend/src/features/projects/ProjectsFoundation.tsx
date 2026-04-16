@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import { ProjectForm } from './components/ProjectForm';
 import { ProjectsList } from './components/ProjectsList';
 import { ProjectsMessage } from './components/ProjectsMessage';
 import { useProjects } from './useProjects';
 
 export function ProjectsFoundation() {
+  const { t } = useTranslation();
   const projects = useProjects();
 
   return (
@@ -11,13 +13,14 @@ export function ProjectsFoundation() {
       <div className="rounded-lg border border-zinc-200 bg-white p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-sm font-medium text-emerald-700">Projects</p>
+            <p className="text-sm font-medium text-[rgb(var(--color-accent-text))]">
+              {t('projects.eyebrow')}
+            </p>
             <h2 className="mt-3 text-2xl font-semibold tracking-normal text-zinc-950">
-              Manage projects
+              {t('projects.title')}
             </h2>
             <p className="mt-3 max-w-2xl text-base leading-7 text-zinc-600">
-              Create project labels, keep names current, and use colors that
-              make tracked work easy to scan.
+              {t('projects.description')}
             </p>
           </div>
 
@@ -27,7 +30,7 @@ export function ProjectsFoundation() {
             onClick={projects.loadProjects}
             type="button"
           >
-            Refresh
+            {t('common.refresh')}
           </button>
         </div>
 

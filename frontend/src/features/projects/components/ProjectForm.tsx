@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { CreateProjectPayload } from '../../../types';
 import { ProjectColorField } from './ProjectColorField';
 
@@ -14,6 +15,7 @@ export function ProjectForm({
   isCreating,
   onCreateProject,
 }: ProjectFormProps) {
+  const { t } = useTranslation();
   const [name, setName] = useState('');
   const [color, setColor] = useState(DEFAULT_PROJECT_COLOR);
 
@@ -34,22 +36,24 @@ export function ProjectForm({
       onSubmit={submitProject}
     >
       <div>
-        <p className="text-sm font-medium text-emerald-700">New project</p>
+        <p className="text-sm font-medium text-[rgb(var(--color-accent-text))]">
+          {t('projects.newProject')}
+        </p>
         <h3 className="mt-3 text-xl font-semibold tracking-normal text-zinc-950">
-          Create a project
+          {t('projects.createTitle')}
         </h3>
       </div>
 
-      <div className="mt-6 grid gap-5 lg:grid-cols-[1fr_320px_auto] lg:items-end">
+      <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(220px,320px)_auto] lg:items-end">
         <label className="block">
           <span className="text-sm font-medium text-zinc-700">
-            Project name
+            {t('projects.name')}
           </span>
           <input
-            className="mt-2 w-full rounded-md border border-zinc-300 bg-white px-4 py-3 text-base text-zinc-950 outline-none transition focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+            className="mt-2 w-full rounded-md border border-zinc-300 bg-white px-4 py-3 text-base text-zinc-950 outline-none transition focus:border-[rgb(var(--color-accent))] focus:ring-2 focus:ring-[rgb(var(--color-accent-soft))]"
             disabled={isCreating}
             onChange={(event) => setName(event.target.value)}
-            placeholder="Client work, Internal, Learning"
+            placeholder={t('projects.namePlaceholder')}
             type="text"
             value={name}
           />
@@ -59,16 +63,16 @@ export function ProjectForm({
           color={color}
           disabled={isCreating}
           id="new-project-color"
-          label="Project color"
+          label={t('projects.projectColor')}
           onColorChange={setColor}
         />
 
         <button
-          className="rounded-md bg-emerald-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:bg-zinc-400"
+          className="rounded-md bg-[rgb(var(--color-accent))] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[rgb(var(--color-accent-hover))] disabled:cursor-not-allowed disabled:bg-zinc-400"
           disabled={isCreating || name.trim().length === 0 || color.length === 0}
           type="submit"
         >
-          {isCreating ? 'Creating...' : 'Create'}
+          {isCreating ? t('common.creating') : t('common.create')}
         </button>
       </div>
     </form>

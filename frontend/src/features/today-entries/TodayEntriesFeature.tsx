@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { TodayEntriesGroupedSummary } from './components/TodayEntriesGroupedSummary';
 import { TodayEntriesList } from './components/TodayEntriesList';
 import { TodayEntriesMessage } from './components/TodayEntriesMessage';
@@ -10,6 +11,7 @@ type TodayEntriesFeatureProps = {
 export function TodayEntriesFeature({
   refreshSignal = 0,
 }: TodayEntriesFeatureProps) {
+  const { t } = useTranslation();
   const todayEntries = useTodayEntries(refreshSignal);
 
   return (
@@ -17,13 +19,14 @@ export function TodayEntriesFeature({
       <div className="rounded-lg border border-zinc-200 bg-white p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-sm font-medium text-emerald-700">Today</p>
+            <p className="text-sm font-medium text-[rgb(var(--color-accent-text))]">
+              {t('today.eyebrow')}
+            </p>
             <h2 className="mt-3 text-2xl font-semibold tracking-normal text-zinc-950">
-              Today entries
+              {t('today.title')}
             </h2>
             <p className="mt-3 max-w-2xl text-base leading-7 text-zinc-600">
-              Review today's tracked work, adjust details, and keep project
-              totals current.
+              {t('today.description')}
             </p>
           </div>
 
@@ -33,7 +36,7 @@ export function TodayEntriesFeature({
             onClick={todayEntries.loadTodayEntries}
             type="button"
           >
-            Refresh
+            {t('common.refresh')}
           </button>
         </div>
 

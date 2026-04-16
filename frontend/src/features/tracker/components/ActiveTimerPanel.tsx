@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { Project, TimeEntry } from '../../../types';
 import { formatElapsedTime } from '../../../utils/format-elapsed-time';
 
@@ -16,38 +17,50 @@ export function ActiveTimerPanel({
   isStopping,
   onStop,
 }: ActiveTimerPanelProps) {
+  const { i18n, t } = useTranslation();
+
   if (!activeTimer) {
     return (
       <section className="rounded-lg border border-zinc-200 bg-white p-6">
-        <p className="text-sm font-medium text-emerald-700">Active timer</p>
-        <h2 className="mt-3 text-2xl font-semibold tracking-normal text-zinc-950">
-          Ready to track time
+        <p className="text-sm font-medium text-[rgb(var(--color-accent-text))]">
+          {t('tracker.activeTimer')}
+        </p>
+        <h2 className="mt-3 text-2xl font-semibold tracking-normal text-zinc-950 sm:text-3xl">
+          {t('tracker.readyTitle')}
         </h2>
         <p className="mt-3 text-base leading-7 text-zinc-600">
-          Choose a project, enter a task name, and start a focused work session.
+          {t('tracker.readyDescription')}
         </p>
       </section>
     );
   }
 
   return (
-    <section className="rounded-lg border border-emerald-200 bg-white p-6 shadow-sm">
+    <section className="rounded-lg border border-[rgb(var(--color-accent-border))] bg-white p-6 shadow-sm">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <p className="text-sm font-medium text-emerald-700">Active timer</p>
-          <h2 className="mt-3 text-2xl font-semibold tracking-normal text-zinc-950">
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-[rgb(var(--color-accent-text))]">
+            {t('tracker.activeTimer')}
+          </p>
+          <h2 className="mt-3 break-words text-2xl font-semibold tracking-normal text-zinc-950 sm:text-3xl">
             {activeTimer.taskName}
           </h2>
           <div className="mt-3 flex flex-wrap gap-3 text-sm text-zinc-600">
-            <span>{activeProject?.name ?? 'Project'}</span>
-            <span>Started {new Date(activeTimer.startTime).toLocaleTimeString()}</span>
+            <span>{activeProject?.name ?? t('common.project')}</span>
+            <span>
+              {t('tracker.startedAt', {
+                time: new Date(activeTimer.startTime).toLocaleTimeString(
+                  i18n.language,
+                ),
+              })}
+            </span>
           </div>
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="rounded-lg border border-zinc-200 bg-neutral-50 px-5 py-4 text-center">
             <p className="text-xs font-medium uppercase text-zinc-500">
-              Running
+              {t('tracker.runningLabel')}
             </p>
             <p className="mt-1 font-mono text-3xl font-semibold text-zinc-950">
               {formatElapsedTime(elapsedSeconds)}
@@ -60,7 +73,7 @@ export function ActiveTimerPanel({
             onClick={onStop}
             type="button"
           >
-            {isStopping ? 'Stopping...' : 'Stop'}
+            {isStopping ? t('tracker.stopping') : t('tracker.stop')}
           </button>
         </div>
       </div>

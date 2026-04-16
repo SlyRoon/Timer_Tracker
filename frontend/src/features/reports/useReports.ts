@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   exportReportCsv,
   getProjects,
@@ -13,12 +14,12 @@ function getTodayInputValue() {
   return new Date(now.getTime() - offsetMs).toISOString().slice(0, 10);
 }
 
-function getErrorMessage(error: unknown) {
+function getErrorMessage(error: unknown, fallback: string) {
   if (error instanceof Error) {
     return error.message;
   }
 
-  return 'Something went wrong. Try again.';
+  return fallback;
 }
 
 function triggerCsvDownload(blob: Blob, fileName: string) {
@@ -34,6 +35,7 @@ function triggerCsvDownload(blob: Blob, fileName: string) {
 }
 
 export function useReports() {
+  const { t } = useTranslation();
   const [period, setPeriod] = useState<ReportPeriod>('day');
   const [date, setDate] = useState(getTodayInputValue);
   const [report, setReport] = useState<PeriodReport | null>(null);
@@ -70,12 +72,12 @@ export function useReports() {
       setProjects(nextProjects);
       setReport(nextReport);
     } catch (loadError) {
-      setError(getErrorMessage(loadError));
+      setError(getErrorMessage(loadError, t('common.genericError')));
       setReport(null);
     } finally {
       setIsLoading(false);
     }
-  }, [date, period]);
+  }, [date, period, t]);
 
   useEffect(() => {
     loadReport();
@@ -89,9 +91,9 @@ export function useReports() {
     try {
       const csv = await exportReportCsv(period, date);
       triggerCsvDownload(csv.blob, csv.fileName);
-      setMessage('CSV export started.');
-    } catch (exportError) {
-      setError(getErrorMessage(exportError));
+      setMessage(t('reports.csvStarted'));
+    } catch {
+      setError(t('reports.csvFailed'));
     } finally {
       setIsExporting(false);
     }

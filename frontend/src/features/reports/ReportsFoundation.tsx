@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { ReportControls } from './components/ReportControls';
 import { ReportGroupedTable } from './components/ReportGroupedTable';
 import { ReportMessage } from './components/ReportMessage';
@@ -5,19 +6,21 @@ import { ReportSummary } from './components/ReportSummary';
 import { useReports } from './useReports';
 
 export function ReportsFoundation() {
+  const { t } = useTranslation();
   const reports = useReports();
 
   return (
     <section className="space-y-5">
       <div className="rounded-lg border border-zinc-200 bg-white p-6">
         <div>
-          <p className="text-sm font-medium text-emerald-700">Reports</p>
+          <p className="text-sm font-medium text-[rgb(var(--color-accent-text))]">
+            {t('reports.eyebrow')}
+          </p>
           <h2 className="mt-3 text-2xl font-semibold tracking-normal text-zinc-950">
-            Reports
+            {t('reports.title')}
           </h2>
           <p className="mt-3 max-w-2xl text-base leading-7 text-zinc-600">
-            Review tracked time by day, week, or month and export the current
-            report as CSV.
+            {t('reports.description')}
           </p>
         </div>
 

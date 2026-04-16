@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface TrackerMessageProps {
   error: string;
   isLoading: boolean;
@@ -9,10 +11,12 @@ export function TrackerMessage({
   isLoading,
   message,
 }: TrackerMessageProps) {
+  const { t } = useTranslation();
+
   if (isLoading) {
     return (
       <div className="rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600">
-        Loading tracker data...
+        {t('tracker.loadingData')}
       </div>
     );
   }
@@ -27,7 +31,7 @@ export function TrackerMessage({
 
   if (message) {
     return (
-      <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+      <div className="rounded-lg border border-[rgb(var(--color-accent-border))] bg-[rgb(var(--color-accent-soft))] px-4 py-3 text-sm text-[rgb(var(--color-accent-text))]">
         {message}
       </div>
     );

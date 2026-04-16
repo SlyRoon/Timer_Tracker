@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   createProject as createProjectRequest,
   getProjects,
@@ -6,12 +7,12 @@ import {
 } from '../../api';
 import type { CreateProjectPayload, Project, UpdateProjectPayload } from '../../types';
 
-function getErrorMessage(error: unknown) {
+function getErrorMessage(error: unknown, fallback: string) {
   if (error instanceof Error) {
     return error.message;
   }
 
-  return 'Something went wrong. Try again.';
+  return fallback;
 }
 
 function normalizeProjectPayload(payload: CreateProjectPayload) {
@@ -22,6 +23,7 @@ function normalizeProjectPayload(payload: CreateProjectPayload) {
 }
 
 export function useProjects() {
+  const { t } = useTranslation();
   const [projects, setProjects] = useState<Project[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
@@ -39,11 +41,11 @@ export function useProjects() {
       const nextProjects = await getProjects();
       setProjects(nextProjects);
     } catch (loadError) {
-      setError(getErrorMessage(loadError));
+      setError(getErrorMessage(loadError, t('common.genericError')));
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     loadProjects();
@@ -53,7 +55,7 @@ export function useProjects() {
     const normalizedPayload = normalizeProjectPayload(payload);
 
     if (!normalizedPayload.name || !normalizedPayload.color) {
-      setError('Project name and color are required.');
+      setError(t('projects.validationRequired'));
       return false;
     }
 
@@ -64,10 +66,10 @@ export function useProjects() {
     try {
       await createProjectRequest(normalizedPayload);
       await loadProjects();
-      setMessage('Project created.');
+      setMessage(t('projects.created'));
       return true;
     } catch (createError) {
-      setError(getErrorMessage(createError));
+      setError(getErrorMessage(createError, t('common.genericError')));
       return false;
     } finally {
       setIsCreating(false);
@@ -84,7 +86,7 @@ export function useProjects() {
     });
 
     if (!normalizedPayload.name || !normalizedPayload.color) {
-      setError('Project name and color are required.');
+      setError(t('projects.validationRequired'));
       return;
     }
 
@@ -95,9 +97,9 @@ export function useProjects() {
     try {
       await updateProjectRequest(projectId, normalizedPayload);
       await loadProjects();
-      setMessage('Project updated.');
+      setMessage(t('projects.updated'));
     } catch (updateError) {
-      setError(getErrorMessage(updateError));
+      setError(getErrorMessage(updateError, t('common.genericError')));
     } finally {
       setUpdatingProjectId(null);
     }

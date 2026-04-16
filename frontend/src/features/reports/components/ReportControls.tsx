@@ -1,9 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import type { ReportPeriod } from '../../../types';
 
-const PERIODS: Array<{ label: string; value: ReportPeriod }> = [
-  { label: 'Day', value: 'day' },
-  { label: 'Week', value: 'week' },
-  { label: 'Month', value: 'month' },
+const PERIODS: Array<{ labelKey: string; value: ReportPeriod }> = [
+  { labelKey: 'reports.day', value: 'day' },
+  { labelKey: 'reports.week', value: 'week' },
+  { labelKey: 'reports.month', value: 'month' },
 ];
 
 interface ReportControlsProps {
@@ -27,10 +28,14 @@ export function ReportControls({
   onRefresh,
   period,
 }: ReportControlsProps) {
+  const { t } = useTranslation();
+
   return (
-    <div className="mt-6 grid gap-5 lg:grid-cols-[1fr_220px_auto_auto] lg:items-end">
+    <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_220px_auto_auto] lg:items-end">
       <div>
-        <p className="text-sm font-medium text-zinc-700">Period</p>
+        <p className="text-sm font-medium text-zinc-700">
+          {t('common.period')}
+        </p>
         <div className="mt-2 flex flex-wrap gap-2">
           {PERIODS.map((item) => {
             const isSelected = item.value === period;
@@ -40,7 +45,7 @@ export function ReportControls({
                 className={[
                   'rounded-md border px-4 py-2 text-sm font-semibold transition',
                   isSelected
-                    ? 'border-emerald-700 bg-emerald-700 text-white'
+                    ? 'border-[rgb(var(--color-accent))] bg-[rgb(var(--color-accent))] text-white'
                     : 'border-zinc-300 bg-white text-zinc-700 hover:border-zinc-400 hover:text-zinc-950',
                 ].join(' ')}
                 disabled={isLoading}
@@ -48,7 +53,7 @@ export function ReportControls({
                 onClick={() => onPeriodChange(item.value)}
                 type="button"
               >
-                {item.label}
+                {t(item.labelKey)}
               </button>
             );
           })}
@@ -56,9 +61,11 @@ export function ReportControls({
       </div>
 
       <label className="block">
-        <span className="text-sm font-medium text-zinc-700">Date</span>
+        <span className="text-sm font-medium text-zinc-700">
+          {t('common.date')}
+        </span>
         <input
-          className="mt-2 w-full rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm text-zinc-950 outline-none transition focus:border-emerald-700 focus:ring-2 focus:ring-emerald-100"
+          className="mt-2 w-full rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm text-zinc-950 outline-none transition focus:border-[rgb(var(--color-accent))] focus:ring-2 focus:ring-[rgb(var(--color-accent-soft))]"
           disabled={isLoading}
           onChange={(event) => onDateChange(event.target.value)}
           type="date"
@@ -72,16 +79,16 @@ export function ReportControls({
         onClick={onRefresh}
         type="button"
       >
-        Refresh
+        {t('common.refresh')}
       </button>
 
       <button
-        className="rounded-md bg-emerald-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:bg-zinc-400"
+        className="rounded-md bg-[rgb(var(--color-accent))] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[rgb(var(--color-accent-hover))] disabled:cursor-not-allowed disabled:bg-zinc-400"
         disabled={isLoading || isExporting}
         onClick={onExportCsv}
         type="button"
       >
-        {isExporting ? 'Exporting...' : 'Export CSV'}
+        {isExporting ? t('common.exporting') : t('common.exportCsv')}
       </button>
     </div>
   );

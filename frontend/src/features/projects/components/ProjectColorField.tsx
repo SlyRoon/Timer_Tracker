@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 const COLOR_OPTIONS = [
   '#047857',
   '#2563eb',
@@ -22,6 +24,8 @@ export function ProjectColorField({
   label,
   onColorChange,
 }: ProjectColorFieldProps) {
+  const { t } = useTranslation();
+
   return (
     <div>
       <label className="text-sm font-medium text-zinc-700" htmlFor={id}>
@@ -44,7 +48,7 @@ export function ProjectColorField({
 
             return (
               <button
-                aria-label={`Use color ${option}`}
+                aria-label={t('projects.useColor', { color: option })}
                 className={[
                   'h-8 w-8 rounded-md border transition disabled:cursor-not-allowed',
                   isSelected

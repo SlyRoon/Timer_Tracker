@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { Project, ProjectTotal, TodayEntryGroup } from '../../../types';
 import { formatDuration } from '../../../utils/format-duration';
 
@@ -14,6 +15,8 @@ export function TodayEntriesGroupedSummary({
   projectById,
   totals,
 }: TodayEntriesGroupedSummaryProps) {
+  const { t } = useTranslation();
+
   if (isLoading || groups.length === 0) {
     return null;
   }
@@ -24,9 +27,11 @@ export function TodayEntriesGroupedSummary({
 
   return (
     <section className="rounded-lg border border-zinc-200 bg-white p-6">
-      <p className="text-sm font-medium text-emerald-700">Grouped totals</p>
+      <p className="text-sm font-medium text-[rgb(var(--color-accent-text))]">
+        {t('today.groupedTotals')}
+      </p>
       <h2 className="mt-3 text-2xl font-semibold tracking-normal text-zinc-950">
-        By project
+        {t('today.byProject')}
       </h2>
 
       <div className="mt-6 grid gap-3">
@@ -43,10 +48,12 @@ export function TodayEntriesGroupedSummary({
               <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <p className="font-semibold text-zinc-950">
-                    {project?.name ?? 'Unknown project'}
+                    {project?.name ?? t('common.unknownProject')}
                   </p>
                   <p className="mt-1 text-sm text-zinc-600">
-                    {group.entries.length} entries
+                    {t('today.entriesCount', {
+                      count: group.entries.length,
+                    })}
                   </p>
                 </div>
                 <p className="font-mono text-xl font-semibold text-zinc-950">

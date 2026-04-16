@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { TaskName } from '../../../types';
 
 interface AutocompleteDropdownProps {
@@ -13,6 +14,8 @@ export function AutocompleteDropdown({
   onSelect,
   suggestions,
 }: AutocompleteDropdownProps) {
+  const { i18n, t } = useTranslation();
+
   if (!isOpen) {
     return null;
   }
@@ -20,12 +23,14 @@ export function AutocompleteDropdown({
   return (
     <div className="absolute left-0 right-0 top-full z-10 mt-2 overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm">
       {isLoading ? (
-        <p className="px-4 py-3 text-sm text-zinc-600">Loading suggestions...</p>
+        <p className="px-4 py-3 text-sm text-zinc-600">
+          {t('tracker.loadingSuggestions')}
+        </p>
       ) : null}
 
       {!isLoading && suggestions.length === 0 ? (
         <p className="px-4 py-3 text-sm text-zinc-600">
-          No task suggestions yet.
+          {t('tracker.noSuggestions')}
         </p>
       ) : null}
 
@@ -41,9 +46,11 @@ export function AutocompleteDropdown({
                 }}
                 type="button"
               >
-                <span>{suggestion.value}</span>
+                <span className="min-w-0 break-words">{suggestion.value}</span>
                 <span className="text-xs text-zinc-500">
-                  {new Date(suggestion.lastUsedAt).toLocaleDateString()}
+                  {new Date(suggestion.lastUsedAt).toLocaleDateString(
+                    i18n.language,
+                  )}
                 </span>
               </button>
             </li>
