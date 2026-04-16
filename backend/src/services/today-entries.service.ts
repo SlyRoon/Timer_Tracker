@@ -16,6 +16,7 @@ import {
   getStartOfDay,
   normalizeRequiredText,
   summarizeEntries,
+  toServiceTimeEntry,
 } from './service.helpers.js';
 
 const trackTaskNameUsage = async (taskName: string) => {
@@ -34,8 +35,10 @@ const trackTaskNameUsage = async (taskName: string) => {
 };
 
 export const TodayEntriesService = {
-  getTodayEntries(date = new Date()) {
-    return TimeEntryRepository.findTodayEntries(date);
+  async getTodayEntries(date = new Date()) {
+    const entries = await TimeEntryRepository.findTodayEntries(date);
+
+    return entries.map(toServiceTimeEntry);
   },
 
   async updateTaskName(input: UpdateEntryTaskNameInput) {
@@ -50,7 +53,7 @@ export const TodayEntriesService = {
 
     await trackTaskNameUsage(taskName);
 
-    return updatedEntry;
+    return toServiceTimeEntry(updatedEntry);
   },
 
   async updateProject(input: UpdateEntryProjectInput) {
@@ -68,7 +71,7 @@ export const TodayEntriesService = {
       throw new ServiceError('NOT_FOUND', 'Time entry not found');
     }
 
-    return updatedEntry;
+    return toServiceTimeEntry(updatedEntry);
   },
 
   async updateManualTime(input: UpdateEntryManualTimeInput) {
@@ -89,11 +92,15 @@ export const TodayEntriesService = {
       );
     }
 
+    const recalculatedDuration =
+      endTime !== null && endTime !== undefined
+        ? calculateDurationMinutes(startTime, endTime)
+        : undefined;
+
     const durationMinutes =
       input.durationMinutes ??
-      (endTime
-        ? calculateDurationMinutes(startTime, endTime)
-        : currentEntry.durationMinutes);
+      recalculatedDuration ??
+      currentEntry.durationMinutes;
 
     const updatedEntry = await TimeEntryRepository.updateById(input.entryId, {
       startTime,
@@ -108,7 +115,7 @@ export const TodayEntriesService = {
       throw new ServiceError('NOT_FOUND', 'Time entry not found');
     }
 
-    return updatedEntry;
+    return toServiceTimeEntry(updatedEntry);
   },
 
   async deleteEntry(entryId: EntityId) {
@@ -118,7 +125,7 @@ export const TodayEntriesService = {
       throw new ServiceError('NOT_FOUND', 'Time entry not found');
     }
 
-    return deletedEntry;
+    return toServiceTimeEntry(deletedEntry);
   },
 
   async groupEntriesByProject(date = new Date()) {

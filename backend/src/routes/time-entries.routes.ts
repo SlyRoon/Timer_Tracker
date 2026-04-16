@@ -16,6 +16,16 @@ timeEntriesRouter.get(
   validateRequest(getTodayEntriesSchema),
   TodayEntriesController.getTodayEntries,
 );
+timeEntriesRouter.get(
+  '/today/grouped',
+  validateRequest(getTodayEntriesSchema),
+  TodayEntriesController.groupEntriesByProject,
+);
+timeEntriesRouter.get(
+  '/today/totals',
+  validateRequest(getTodayEntriesSchema),
+  TodayEntriesController.calculateTotalsByProject,
+);
 timeEntriesRouter.patch(
   '/:id/task-name',
   validateRequest(updateEntryTaskNameSchema),
@@ -27,7 +37,7 @@ timeEntriesRouter.patch(
   TodayEntriesController.updateProject,
 );
 timeEntriesRouter.patch(
-  '/:id/duration',
+  '/:id/manual-time',
   validateRequest(updateManualTimeSchema),
   TodayEntriesController.updateManualTime,
 );
