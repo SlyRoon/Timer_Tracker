@@ -19,6 +19,10 @@ export class ApiRequestError extends Error {
   }
 }
 
+export function getApiUrl(path: string) {
+  return `${API_BASE_URL}${path}`;
+}
+
 function isJsonBody(body: RequestOptions['body']) {
   return body !== null && typeof body === 'object' && !(body instanceof FormData);
 }
