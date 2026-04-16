@@ -1,10 +1,22 @@
-import type { ApiResponse } from '../types/http';
+import type { ApiError, ApiResponse } from '../types/http';
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:5000/api';
 
 interface RequestOptions extends Omit<RequestInit, 'body'> {
   body?: BodyInit | object | null;
+}
+
+export class ApiRequestError extends Error {
+  code: string;
+  details?: unknown;
+
+  constructor(error: ApiError['error']) {
+    super(error.message);
+    this.name = 'ApiRequestError';
+    this.code = error.code;
+    this.details = error.details;
+  }
 }
 
 function isJsonBody(body: RequestOptions['body']) {
@@ -29,4 +41,17 @@ export async function apiRequest<TData>(
   });
 
   return response.json() as Promise<ApiResponse<TData>>;
+}
+
+export async function requestData<TData>(
+  path: string,
+  options: RequestOptions = {},
+): Promise<TData> {
+  const response = await apiRequest<TData>(path, options);
+
+  if (!response.success) {
+    throw new ApiRequestError(response.error);
+  }
+
+  return response.data;
 }

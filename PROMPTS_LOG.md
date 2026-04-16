@@ -1330,6 +1330,116 @@ Scope цього етапу:
 
 ---
 
+## Entry 015 — Tracker UI
+
+- Entry number: Entry 015
+- Етап: Етап 13 — Tracker UI
+- Інструмент: Codex
+- Branch: `feat/frontend-tracker-ui`
+- Порядок виконання: Entry 015
+- Ключовий промпт: Condensed version — завершити lifecycle `feat/frontend-foundation`, перейти на актуальний `main`, змерджити Етап 12, видалити local/remote branch, створити `feat/frontend-tracker-ui`; працювати тільки над Етапом 13 у `frontend/`: реалізувати головний tracker screen, task input, autocomplete dropdown, project select, Start/Stop, active timer block, loading/error states, підключення до timer API і task autocomplete API; не переходити до Today entries UI, Projects UI, Reports UI, backend змін або Docker; виконати frontend build, локально перевірити tracker flow, оновити README і `PROMPTS_LOG.md`, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач повідомив, що Етап 12 завершено в `feat/frontend-foundation`, і попросив виконати git lifecycle цієї branch, створити `feat/frontend-tracker-ui` та реалізувати тільки Етап 13 — Tracker UI. Scope: тільки `frontend/`, використати існуючий foundation, підключити UI до backend timer/task autocomplete/projects API, зробити task input, project select, autocomplete dropdown, Start/Stop, active timer block, loading/error states, синхронізацію після start/stop, без Today entries UI, Projects UI, Reports UI, backend рефактору, Docker або переходу до Етапу 14.
+  - Original prompt (verbatim excerpt):
+
+```md
+Поточний стан:
+- останній завершений етап — **Етап 12 — Frontend foundation**
+- поточна branch: `feat/frontend-foundation`
+- далі за roadmap треба перейти до **Етапу 13 — Tracker UI**
+
+Перед початком роботи виконай git lifecycle для попередньої branch:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Змерджи `feat/frontend-foundation` у `main`
+6. Виконай `git push origin main`
+7. Видали локальну branch:
+   `git branch -d feat/frontend-foundation`
+8. Спробуй видалити remote branch:
+   `git push origin --delete feat/frontend-foundation`
+9. Створи нову branch:
+   `feat/frontend-tracker-ui`
+10. Переключись у неї і тільки після цього починай Етап 13
+
+Потрібно реалізувати **тільки Етап 13 — Tracker UI** для Time Tracker.
+
+У межах цього етапу потрібно реалізувати:
+1. поле введення `task name`
+2. autocomplete dropdown
+3. `project select`
+4. кнопку `Start`
+5. кнопку `Stop`
+6. active timer block зверху сторінки
+7. відображення активного запису
+8. loading states
+9. error states
+
+Що важливо:
+- підключити UI до timer API і task autocomplete API
+- синхронізувати UI після start / stop
+- не звалити все в один компонент
+- тримати API calls в api layer
+- тримати логіку в hooks / features
+- presentation components мають лишатися максимально чистими
+
+Перевірки після змін:
+1. `git status`
+2. `npm --prefix frontend run build`
+3. якщо build падає — виправ тільки те, що стосується Етапу 13
+4. локально запусти frontend
+5. перевір tracker flow руками:
+   - task input
+   - project select
+   - autocomplete
+   - start
+   - active timer visible
+   - stop
+6. `git add .`
+7. `git commit -m "feat: implement tracker ui flow"`
+8. `git push origin feat/frontend-tracker-ui`
+```
+
+- Логіка: API calls винесено в `frontend/src/api`, tracker state і side effects винесено в `useTracker`, а UI розділено на presentation components для active timer, form, autocomplete dropdown і status/error messages. Tracker page використовує існуючий foundation і не додає нових бібліотек.
+- Результат: Tracker UI flow реалізовано; користувач може завантажити tracker page, вибрати project, ввести task name, отримати autocomplete suggestions, запустити timer, побачити active timer block і зупинити timer без перезавантаження сторінки. Frontend готовий до наступного етапу — Today entries UI.
+- Змінені файли:
+  - `frontend/src/api/http-client.ts`
+  - `frontend/src/api/index.ts`
+  - `frontend/src/api/projects-api.ts`
+  - `frontend/src/api/task-names-api.ts`
+  - `frontend/src/api/timer-api.ts`
+  - `frontend/src/features/tracker/TrackerFoundation.tsx`
+  - `frontend/src/features/tracker/useTracker.ts`
+  - `frontend/src/features/tracker/components/ActiveTimerPanel.tsx`
+  - `frontend/src/features/tracker/components/AutocompleteDropdown.tsx`
+  - `frontend/src/features/tracker/components/TrackerForm.tsx`
+  - `frontend/src/features/tracker/components/TrackerMessage.tsx`
+  - `frontend/src/types/domain.ts`
+  - `frontend/src/types/index.ts`
+  - `frontend/src/utils/format-elapsed-time.ts`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - завершено lifecycle `feat/frontend-foundation`
+  - `main` актуальний і містить Етап 12
+  - local branch `feat/frontend-foundation` видалено
+  - remote branch `feat/frontend-foundation` видалено
+  - створено branch `feat/frontend-tracker-ui`
+  - `npm --prefix frontend run build` проходить
+  - frontend dev server локально стартує і tracker page повертає HTTP 200
+  - `GET /api/projects` повертає projects для project select
+  - `POST /api/timer/start` стартує timer з taskName і projectId
+  - `GET /api/timer/active` повертає active timer після start
+  - `GET /api/task-names/suggestions?query=Stage13&limit=5` повертає autocomplete suggestion для створеного taskName
+  - `POST /api/timer/stop` зупиняє active timer
+  - `GET /api/timer/active` після stop повертає `null`
+  - тестовий time entry, створений для перевірки, видалено через існуючий `DELETE /api/time-entries/:id`
+  - backend code, Docker, Today entries UI, Projects UI і Reports UI не змінювалися
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; локальна перевірка запускала backend/frontend dev servers на тимчасових портах і зупинила їх після перевірки. Тестовий project і TaskName document можуть залишитися в локальній MongoDB як побічні дані перевірки, бо project delete не входить у поточний UI scope.
+
+---
+
 ## Template for next entries
 
 ```md
