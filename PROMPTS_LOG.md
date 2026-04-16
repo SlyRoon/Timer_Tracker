@@ -1866,6 +1866,116 @@ Scope цього етапу:
 
 ---
 
+## Entry 020 — Docs + submission
+
+- Entry number: Entry 020
+- Етап: Етап 18 — Docs + submission
+- Інструмент: Codex
+- Branch: `docs/final-submission`
+- Порядок виконання: Entry 020
+- Ключовий промпт: Condensed version — завершити lifecycle `chore/integration-polish`, перейти на актуальний `main`, створити `docs/final-submission`; працювати тільки над фінальним Етапом 18; не додавати нові фічі, Docker, нові бібліотеки або code refactor; фіналізувати `README.md`, перевірити й доповнити `PROMPTS_LOG.md`, додати architecture summary, local setup, env notes, run scripts, implemented features, API overview, AI-first workflow, MongoDB decision, deployment notes і submission notes; виконати backend/frontend build, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач повідомив, що Етап 17 — Integration polish завершено в `chore/integration-polish`, і попросив пройти git lifecycle цієї branch, створити `docs/final-submission` та виконати тільки фінальний Етап 18 — Docs + submission. Scope: README, PROMPTS_LOG і дрібні docs/config corrections для submission-ready стану; без нових backend/frontend фіч, Docker, зміни стеку або великого рефактору; README має бути корисним для перевіряючого й пояснювати fullstack стан, локальний запуск, env, API, CSV export, MongoDB + Mongoose choice, AI-first workflow і deployment notes.
+  - Original prompt (verbatim excerpt):
+
+```md
+Поточний стан:
+- останній завершений етап — **Етап 17 — Integration polish**
+- поточна branch: `chore/integration-polish`
+- далі за roadmap треба перейти до **Етапу 18 — Docs + submission**
+
+Перед початком роботи виконай git lifecycle для попередньої branch:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Змерджи `chore/integration-polish` у `main`
+6. Виконай `git push origin main`
+7. Видали локальну branch:
+   `git branch -d chore/integration-polish`
+8. Спробуй видалити remote branch:
+   `git push origin --delete chore/integration-polish`
+9. Створи нову branch:
+   `docs/final-submission`
+10. Переключись у неї і тільки після цього починай Етап 18
+
+Потрібно реалізувати **тільки Етап 18 — Docs + submission** для Time Tracker.
+
+Важливо:
+- не вигадуй нові фічі
+- не роби великий рефактор коду
+- не переходь у Docker
+- не міняй стек
+- не ламай working app
+- фокус тільки на фіналізації репозиторію, README, PROMPTS_LOG і submission-ready стані
+
+Що треба зробити:
+1. Фіналізувати `README.md`
+2. Перевірити й фіналізувати `PROMPTS_LOG.md`
+3. Додати короткий architecture summary
+4. Додати чіткі local setup instructions
+5. Додати env/setup notes
+6. Додати run instructions для frontend і backend
+7. Додати section “What is implemented”
+8. Додати section про AI-first workflow
+9. Додати коротке пояснення вибору MongoDB + Mongoose як свідомого рішення
+10. Додати deploy notes / how to publish
+11. Зробити репозиторій submission-ready без хаосу
+
+У README бажано мати такі блоки:
+- Project overview
+- Tech stack
+- Architecture
+- Implemented features
+- Project structure
+- Local setup
+- Environment variables
+- Available scripts
+- API overview
+- AI-first workflow / prompt logging
+- Deployment notes
+- Submission notes
+
+PROMPTS_LOG:
+- не ламай попередні entries
+- додай **Entry 020 — Docs + submission**
+- зафіксуй original user prompt
+- коротко опиши, що саме фіналізовано для submission
+
+Після змін виконай:
+1. `git status`
+2. `npm --prefix backend run build`
+3. `npm --prefix frontend run build`
+4. якщо build падає — виправ тільки те, що реально потрібно для submission-ready стану
+5. `git add .`
+6. `git commit -m "docs: finalize submission documentation"`
+7. `git push origin docs/final-submission`
+
+Працюй тільки в межах **Етапу 18 — Docs + submission**.
+Це фінальний етап.
+```
+
+- Логіка: Фіналізувати документацію для перевіряючого без зміни функціональності застосунку: README має пояснювати робочий fullstack стан, архітектуру, стек, локальний запуск, env, scripts, API, CSV export, AI-first workflow, MongoDB + Mongoose decision, deployment notes і submission status. `PROMPTS_LOG.md` отримує фінальний audit entry з original prompt.
+- Результат: Repository documentation prepared for final submission. README now serves as the main reviewer guide, while `PROMPTS_LOG.md` preserves the final stage record and original prompt context.
+- Змінені файли:
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - завершено lifecycle `chore/integration-polish`
+  - `main` актуальний і містить Етап 17
+  - local branch `chore/integration-polish` видалено
+  - remote branch `chore/integration-polish` видалено
+  - створено branch `docs/final-submission`
+  - README узгоджено з фактичним fullstack станом проєкту
+  - README містить project overview, tech stack, architecture, implemented features, project structure, local setup, env variables, scripts, API overview, AI-first workflow, deployment notes і submission notes
+  - `time_tracker` лишається коректною локальною MongoDB database name
+  - `PROMPTS_LOG.md` не змінював попередні entries і отримав Entry 020
+  - `npm --prefix backend run build` проходить
+  - `npm --prefix frontend run build` проходить
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex. Зміни обмежені фіналізацією README і `PROMPTS_LOG.md`; backend/frontend feature code, Docker і стек не змінювалися.
+
+---
+
 ## Template for next entries
 
 ```md
