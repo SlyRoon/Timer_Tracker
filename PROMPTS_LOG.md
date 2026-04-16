@@ -886,6 +886,124 @@ Controllers повинні працювати **тільки через service 
 
 ---
 
+## Entry 011 — Today entries management backend
+
+- Entry number: Entry 011
+- Етап: Етап 9 — Today entries management backend
+- Інструмент: Codex
+- Branch: `feat/today-entries-management`
+- Порядок виконання: Entry 011
+- Ключовий промпт: Condensed version — працювати від фактичного стану репозиторію, не блокуватися через відсутню `feat/today-entries-management`, створити нову branch від актуального `main` і виконати тільки Етап 9: завершити today entries management backend для `/api/time-entries`, перевірити flow `route -> controller -> service -> repository -> model`, реалізувати або стабілізувати today list, update task name, update project, manual time correction, delete, grouped entries і totals, не переходити до autocomplete/reports/frontend/Docker, виконати backend build, реальні локальні HTTP checks, оновити README і `PROMPTS_LOG.md`, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач уточнив, що останній реально зафіксований етап — `Entry 010 / Етап 8`, branch `feat/today-entries-management` та `Entry 011` відсутні, тому треба не блокуватися, а створити `feat/today-entries-management` від актуального `main` і виконати саме Етап 9. Scope: time entries feature group, today list, task/project updates, manual time update, delete, grouping і totals, обов'язкова локальна HTTP-перевірка через реальні API-запити з MongoDB `time_tracker`, без переходу до Етапу 10.
+  - Original prompt (verbatim excerpt):
+
+```md
+ВАЖЛИВО: цього разу не блокуйся через відсутню попередню branch.
+Працюй від фактичного стану репозиторію, а не від припущення.
+
+Фактичний стан:
+- останній реально зафіксований етап у `PROMPTS_LOG.md` — **Entry 010 / Етап 8 — Timer start / stop backend**
+- `feat/today-entries-management` відсутня локально і на remote
+- Entry 011 у `PROMPTS_LOG.md` ще немає
+- отже Етап 9 ще не був формально виконаний
+- потрібно перейти саме до **Етапу 9 — Today entries management backend**
+- не можна перескакувати одразу в Етап 10
+
+Перед початком:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. НЕ намагайся merge-ити `feat/today-entries-management`, якщо її не існує
+6. Якщо branch `feat/today-entries-management` не існує — це не blocker
+7. Створи нову branch:
+   `feat/today-entries-management`
+8. Переключись у неї
+9. Тільки після цього починай Етап 9
+
+Потрібно реалізувати **тільки Етап 9 — Today entries management backend** для backend Time Tracker.
+
+Scope Етапу 9:
+1. список сьогоднішніх записів
+2. редагування `taskName`
+3. редагування `projectId`
+4. ручне коригування часу
+5. видалення запису
+6. групування записів за проєктами
+7. totals по кожному проєкту
+
+Зберігай чистий flow:
+`route -> controller -> service -> repository -> model`
+
+API contract:
+- `GET /api/time-entries/today`
+- `PATCH /api/time-entries/:id/task-name`
+- `PATCH /api/time-entries/:id/project`
+- `PATCH /api/time-entries/:id/manual-time`
+- `DELETE /api/time-entries/:id`
+- grouped/totals або в `GET /today`, або окремим узгодженим endpoint’ом
+
+Обов’язкові локальні HTTP checks:
+- happy path для отримання today entries
+- happy path для update task name
+- happy path для update project
+- happy path для manual time update
+- happy path для delete entry
+- invalid або empty `entryId`
+- not found `entryId`
+- invalid або non-existent `projectId`
+- empty `taskName`
+- invalid manual time payload
+- negative `durationMinutes`
+- case, коли `endTime < startTime`
+- grouped entries і totals повертаються стабільно
+
+Після змін виконай:
+1. `git status`
+2. `npm --prefix backend run build`
+3. якщо build падає — виправ тільки те, що стосується Етапу 9
+4. локально перевір today entries endpoints реальними HTTP запитами
+5. у фінальній відповіді ПОКАЖИ конкретно:
+   - які HTTP endpoint’и викликав
+   - які payload’и перевіряв
+   - які status codes отримав
+6. `git add .`
+7. `git commit -m "feat: implement today entries management flow"`
+8. `git push origin feat/today-entries-management`
+```
+
+- Логіка: Завершити today entries management у межах time entries feature group без переходу до autocomplete/reports/frontend. Поточні services/controllers/validators уже частково існували, тому зміни були точкові: підключити grouped/totals endpoints, стабілізувати manual-time route contract, повертати стабільні service DTO для today entries operations і гарантувати validation `endTime < startTime` навіть коли передано `durationMinutes`.
+- Результат: Today entries management backend формально завершено; backend готовий до наступного етапу — Task autocomplete backend.
+- Змінені файли:
+  - `backend/src/routes/time-entries.routes.ts`
+  - `backend/src/services/today-entries.service.ts`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - створено branch `feat/today-entries-management` від актуального `main`
+  - `GET /api/time-entries/today` повертає today entries
+  - `PATCH /api/time-entries/:id/task-name` оновлює `taskName`
+  - `PATCH /api/time-entries/:id/project` оновлює `projectId` і перевіряє існування project
+  - `PATCH /api/time-entries/:id/manual-time` оновлює час і перераховує `durationMinutes`
+  - `DELETE /api/time-entries/:id` видаляє запис
+  - `GET /api/time-entries/today/grouped` повертає grouped entries
+  - `GET /api/time-entries/today/totals` повертає totals by project
+  - invalid `entryId` повертає 400
+  - not found `entryId` повертає 404
+  - invalid `projectId` повертає 400
+  - non-existent `projectId` повертає 404
+  - empty `taskName` повертає 400
+  - empty manual time payload повертає 400
+  - negative `durationMinutes` повертає 400
+  - `endTime < startTime` повертає 400
+  - unified success/error response structure збережено
+  - MongoDB database лишається `time_tracker`
+  - backend build не зламано
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; тестові time entries створювалися через існуючі API endpoints і були прибрані через `DELETE /api/time-entries/:id`. Тестові projects залишилися в локальній MongoDB як побічний результат перевірки, бо Project delete endpoint не входить у поточний scope.
+
+---
+
 ## Template for next entries
 
 ```md
