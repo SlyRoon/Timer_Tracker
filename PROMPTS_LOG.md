@@ -1751,6 +1751,121 @@ Scope цього етапу:
 
 ---
 
+## Entry 019 — Integration polish
+
+- Entry number: Entry 019
+- Етап: Етап 17 — Integration polish
+- Інструмент: Codex
+- Branch: `chore/integration-polish`
+- Порядок виконання: Entry 019
+- Ключовий промпт: Condensed version — завершити lifecycle `feat/frontend-reports-ui`, перейти на актуальний `main`, створити `chore/integration-polish`; працювати тільки над Етапом 17 без Docker, нових фіч або docs submission; перевірити backend/frontend flows end-to-end, env/config, loading/error/empty states, navigation, reports і CSV export; виправити тільки дрібні баги або UX issues, оновити README і `PROMPTS_LOG.md`, виконати backend/frontend build, локальний запуск, e2e перевірки, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач повідомив, що Етап 16 — Reports UI завершено в `feat/frontend-reports-ui`, і попросив пройти git lifecycle попередньої branch, створити `chore/integration-polish` та виконати тільки Етап 17 — Integration polish. Scope: перевірити всі основні backend/frontend flows разом, env/config, loading/error/empty states, navigation, CSV export, не додавати нові фічі, Docker або Docs + submission, виправляти лише дрібні integration/UX bugs, обов'язково оновити README і `PROMPTS_LOG.md`, зробити backend/frontend build, локальний запуск, end-to-end checks, commit і push.
+  - Original prompt (verbatim excerpt):
+
+```md
+Поточний стан:
+- останній завершений етап — **Етап 16 — Reports UI**
+- поточна branch: `feat/frontend-reports-ui`
+- далі за roadmap треба перейти до **Етапу 17 — Integration polish**
+
+Перед початком роботи виконай git lifecycle для попередньої branch:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Змерджи `feat/frontend-reports-ui` у `main`
+6. Виконай `git push origin main`
+7. Видали локальну branch:
+   `git branch -d feat/frontend-reports-ui`
+8. Спробуй видалити remote branch:
+   `git push origin --delete feat/frontend-reports-ui`
+9. Створи нову branch:
+   `chore/integration-polish`
+10. Переключись у неї і тільки після цього починай Етап 17
+
+Потрібно реалізувати **тільки Етап 17 — Integration polish** для Time Tracker.
+
+Ціль етапу:
+не створити новий функціонал, а довести вже реалізований застосунок до стабільного робочого стану end-to-end.
+
+Що обов’язково перевірити end-to-end:
+- start / stop timer
+- active timer
+- task autocomplete
+- create / edit project
+- today entries updates
+- reports day / week / month
+- CSV export
+- empty states
+- edge cases
+- navigation між основними pages
+- чи не ламається один flow після іншого
+
+Обов’язково зроби реальні локальні перевірки:
+- backend build
+- frontend build
+- локальний запуск backend і frontend
+- ручну або headless перевірку ключових користувацьких сценаріїв
+- перевірку, що після тестів не лишаються завислі dev servers
+- перевірку, що working tree чистий після commit
+
+Обов’язково онови:
+- `PROMPTS_LOG.md` — додай **Entry 019 — Integration polish**
+- `README.md` — онови Current Status тільки в межах цього етапу
+
+Після змін виконай:
+1. `git status`
+2. `npm --prefix backend run build`
+3. `npm --prefix frontend run build`
+4. якщо build падає — виправ тільки те, що стосується Етапу 17
+5. локально перевір ключові end-to-end flows
+6. `git add .`
+7. `git commit -m "chore: polish end-to-end integration flows"`
+8. `git push origin chore/integration-polish`
+
+Працюй тільки в межах **Етапу 17 — Integration polish**.
+Не переходь до **Етапу 18 — Docs + submission**.
+```
+
+- Логіка: Завершено branch lifecycle для Reports UI, створено `chore/integration-polish`, виконано мінімальний integration polish без нових фіч: tracker після успішного `Stop` тепер сигналізує today entries блоку перечитати дані, щоб список і grouped totals оновлювалися без ручного Refresh або reload сторінки. README оновлено до статусу Етапу 17.
+- Результат: Застосунок перевірено end-to-end як цілісний fullstack flow; знайдений дрібний integration gap між tracker і today entries закрито; backend/frontend build проходять; локальні backend/frontend servers запускалися на тимчасових портах і були зупинені після перевірок. Проєкт готовий до наступного етапу — Docs + submission, але Етап 18 не реалізовувався.
+- Змінені файли:
+  - `frontend/src/pages/TrackerPage.tsx`
+  - `frontend/src/features/tracker/TrackerFoundation.tsx`
+  - `frontend/src/features/tracker/useTracker.ts`
+  - `frontend/src/features/today-entries/TodayEntriesFeature.tsx`
+  - `frontend/src/features/today-entries/useTodayEntries.ts`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - завершено lifecycle `feat/frontend-reports-ui`
+  - `main` актуальний і містить Етап 16
+  - local branch `feat/frontend-reports-ui` видалено
+  - remote branch `feat/frontend-reports-ui` видалено
+  - створено branch `chore/integration-polish`
+  - `npm --prefix backend run build` проходить
+  - `npm --prefix frontend run build` проходить
+  - локальний backend стартує з `MONGODB_URI=mongodb://127.0.0.1:27017/time_tracker`
+  - локальний frontend стартує з `VITE_API_BASE_URL` на тимчасовий backend port
+  - `GET /api/health` повертає HTTP 200
+  - Project flow: `POST /api/projects` HTTP 201, `PATCH /api/projects/:id` HTTP 200, `GET /api/projects` HTTP 200
+  - Timer flow: empty taskName HTTP 400, start HTTP 201, active timer HTTP 200, duplicate start HTTP 409, stop HTTP 200, stop without active timer HTTP 404
+  - Task autocomplete: filtered suggestions HTTP 200, no-results state HTTP 200, invalid limit HTTP 400
+  - Today entries: list HTTP 200, update task name HTTP 200, update project HTTP 200, invalid/not found entry ids HTTP 400/404, invalid/non-existent project ids HTTP 400/404, empty taskName HTTP 400
+  - Manual time correction: valid correction HTTP 200, negative duration HTTP 400, `endTime < startTime` HTTP 400
+  - Today grouped/totals: `/today/grouped` HTTP 200, `/today/totals` HTTP 200
+  - Delete entry: fixture start/stop HTTP 201/200 і `DELETE /api/time-entries/:id` HTTP 200
+  - Reports: day/week/month HTTP 200, invalid period HTTP 400, no data state HTTP 200 з `totalDurationMinutes = 0`
+  - CSV export: HTTP 200, `text/csv`, headers `projectId,taskName,startTime,endTime,durationMinutes,entryDate`, body містить tracked row
+  - Headless frontend smoke: `#/tracker`, `#/projects`, `#/reports` рендерять відповідні UI sections і navigation
+  - після локальних перевірок не залишилось listener processes на тимчасових backend/frontend ports
+- Знайдені й виправлені баги/неточності:
+  - Today entries UI не мав автоматичного refresh-сигналу після stop timer, через що щойно зупинений запис міг не з'явитися у списку без ручного Refresh; виправлено через `onTimerStopped` callback і `refreshSignal` для `TodayEntriesFeature`.
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex. Перед git lifecycle прибрано pre-existing untracked `frontend/package-lock.json` як generated artifact, що не входив у scope Етапу 17 і заважав чистому working tree. Локальні e2e checks створили тестові project/time-entry/task documents у MongoDB `time_tracker`; частина тестових документів може лишитися як побічні дані перевірки.
+
+---
+
 ## Template for next entries
 
 ```md

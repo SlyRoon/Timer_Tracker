@@ -3,8 +3,14 @@ import { TodayEntriesList } from './components/TodayEntriesList';
 import { TodayEntriesMessage } from './components/TodayEntriesMessage';
 import { useTodayEntries } from './useTodayEntries';
 
-export function TodayEntriesFeature() {
-  const todayEntries = useTodayEntries();
+type TodayEntriesFeatureProps = {
+  refreshSignal?: number;
+};
+
+export function TodayEntriesFeature({
+  refreshSignal = 0,
+}: TodayEntriesFeatureProps) {
+  const todayEntries = useTodayEntries(refreshSignal);
 
   return (
     <section className="space-y-5">

@@ -31,7 +31,11 @@ function getElapsedSeconds(activeTimer: TimeEntry | null, now: number) {
   );
 }
 
-export function useTracker() {
+type UseTrackerOptions = {
+  onTimerStopped?: () => void | Promise<void>;
+};
+
+export function useTracker(options: UseTrackerOptions = {}) {
   const [projects, setProjects] = useState<Project[]>([]);
   const [activeTimer, setActiveTimer] = useState<TimeEntry | null>(null);
   const [taskName, setTaskName] = useState('');
@@ -206,6 +210,7 @@ export function useTracker() {
       setActiveTimer(null);
       setStatusMessage(`Timer stopped for "${stoppedEntry.taskName}".`);
       await refreshSuggestions(stoppedEntry.taskName);
+      await options.onTimerStopped?.();
     } catch (stopError) {
       setError(getErrorMessage(stopError));
     } finally {
