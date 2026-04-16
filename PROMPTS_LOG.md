@@ -1440,6 +1440,113 @@ Scope цього етапу:
 
 ---
 
+## Entry 016 — Today entries UI
+
+- Entry number: Entry 016
+- Етап: Етап 14 — Today entries UI
+- Інструмент: Codex
+- Branch: `feat/frontend-today-entries`
+- Порядок виконання: Entry 016
+- Ключовий промпт: Condensed version — завершити lifecycle `feat/frontend-tracker-ui`, перейти на актуальний `main`, змерджити Етап 13, видалити local/remote branch, створити `feat/frontend-today-entries`; працювати тільки над Етапом 14 у `frontend/`: today entries list, inline edit taskName, edit project, manual time correction, delete entry, grouped view by project, totals by project, loading/error/empty states; використовувати готові backend endpoints, не переходити до Projects UI, Reports UI, backend змін або Docker; виконати frontend build, локально перевірити today entries UI/API flow, оновити README і `PROMPTS_LOG.md`, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач повідомив, що Етап 13 завершено в `feat/frontend-tracker-ui`, і попросив виконати git lifecycle цієї branch, створити `feat/frontend-today-entries` та реалізувати тільки Етап 14 — Today entries UI. Scope: тільки `frontend/`, використати готові backend endpoints для today entries, зробити список сьогоднішніх записів, inline task/project edit, ручне коригування часу, delete, grouped view by project, totals by project, loading/error/empty states, без Projects UI, Reports UI, backend змін, Docker або переходу до Етапу 15.
+  - Original prompt (verbatim excerpt):
+
+```md
+Поточний стан:
+- останній завершений етап — **Етап 13 — Tracker UI**
+- поточна branch: `feat/frontend-tracker-ui`
+- далі за roadmap треба перейти до **Етапу 14 — Today entries UI**
+
+Перед початком роботи виконай git lifecycle для попередньої branch:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Змерджи `feat/frontend-tracker-ui` у `main`
+6. Виконай `git push origin main`
+7. Видали локальну branch:
+   `git branch -d feat/frontend-tracker-ui`
+8. Спробуй видалити remote branch:
+   `git push origin --delete feat/frontend-tracker-ui`
+9. Створи нову branch:
+   `feat/frontend-today-entries`
+10. Переключись у неї і тільки після цього починай Етап 14
+
+Потрібно реалізувати **тільки Етап 14 — Today entries UI** для Time Tracker.
+
+Що треба реалізувати:
+1. список сьогоднішніх записів
+2. inline edit `taskName`
+3. edit `project`
+4. ручне коригування часу
+5. delete entry
+6. grouped view by project
+7. totals by project
+8. loading / error / empty states
+
+Важливо:
+- не звалювати все в один page component
+- винести list / row / edit controls / grouped sections у компоненти
+- тримати API calls в api layer
+- тримати update/delete logic у hooks або feature layer
+- не ламати вже готовий tracker flow
+
+Перевірки після змін:
+1. `git status`
+2. `npm --prefix frontend run build`
+3. якщо build падає — виправ тільки те, що стосується Етапу 14
+4. локально запусти frontend
+5. перевір today entries UI flow руками:
+   - список записів
+   - edit task name
+   - edit project
+   - manual time correction
+   - delete entry
+   - grouped totals visible
+6. `git add .`
+7. `git commit -m "feat: implement today entries ui flow"`
+8. `git push origin feat/frontend-today-entries`
+```
+
+- Логіка: API calls для today entries винесено в `frontend/src/api/time-entries-api.ts`; завантаження list/groups/totals/projects і update/delete side effects винесено в `useTodayEntries`; UI розділено на TodayEntriesFeature, list, row з inline controls, grouped summary і message states. Секцію підключено до tracker page під існуючим timer UI без зміни backend.
+- Результат: Today entries UI flow реалізовано; користувач може бачити сьогоднішні записи, редагувати task name і project, вручну коригувати start/end/duration, видаляти запис, бачити grouped entries і totals by project без перезавантаження сторінки. Frontend готовий до наступного етапу — Projects UI.
+- Змінені файли:
+  - `frontend/src/api/index.ts`
+  - `frontend/src/api/time-entries-api.ts`
+  - `frontend/src/pages/TrackerPage.tsx`
+  - `frontend/src/features/today-entries/TodayEntriesFeature.tsx`
+  - `frontend/src/features/today-entries/useTodayEntries.ts`
+  - `frontend/src/features/today-entries/components/TodayEntriesList.tsx`
+  - `frontend/src/features/today-entries/components/TodayEntryRow.tsx`
+  - `frontend/src/features/today-entries/components/TodayEntriesGroupedSummary.tsx`
+  - `frontend/src/features/today-entries/components/TodayEntriesMessage.tsx`
+  - `frontend/src/types/domain.ts`
+  - `frontend/src/types/index.ts`
+  - `frontend/src/utils/date-time.ts`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - завершено lifecycle `feat/frontend-tracker-ui`
+  - `main` актуальний і містить Етап 13
+  - local branch `feat/frontend-tracker-ui` видалено
+  - remote branch `feat/frontend-tracker-ui` видалено
+  - створено branch `feat/frontend-today-entries`
+  - `npm --prefix frontend run build` проходить
+  - frontend dev server локально стартує і tracker page повертає HTTP 200
+  - тестовий today entry створено через Project + Timer API flow
+  - `GET /api/time-entries/today` повертає створений запис для list UI
+  - `PATCH /api/time-entries/:id/task-name` оновлює taskName
+  - `PATCH /api/time-entries/:id/project` оновлює projectId
+  - `PATCH /api/time-entries/:id/manual-time` оновлює start/end time і повертає durationMinutes `35`
+  - `GET /api/time-entries/today/grouped` повертає grouped entries для target project
+  - `GET /api/time-entries/today/totals` повертає totals by project
+  - `DELETE /api/time-entries/:id` видаляє тестовий запис
+  - backend code, Docker, Projects UI і Reports UI не змінювалися
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; локальна перевірка запускала backend/frontend dev servers на тимчасових портах і зупинила їх після перевірки. Тестові projects і TaskName documents можуть залишитися в локальній MongoDB як побічні дані перевірки, бо project delete не входить у поточний UI scope.
+
+---
+
 ## Template for next entries
 
 ```md
