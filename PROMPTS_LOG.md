@@ -1105,6 +1105,121 @@ Scope цього етапу:
 
 ---
 
+## Entry 013 — Reports + CSV backend
+
+- Entry number: Entry 013
+- Етап: Етап 11 — Reports + CSV backend
+- Інструмент: Codex
+- Branch: `feat/reports-csv`
+- Порядок виконання: Entry 013
+- Ключовий промпт: Condensed version — завершити lifecycle `feat/task-autocomplete`, перейти на актуальний `main`, змерджити/підтвердити Етап 10, видалити local/remote branch, створити `feat/reports-csv`; працювати тільки над Етапом 11 у `/api/reports`: day/week/month reports, totals, grouped output by project, CSV export endpoint, invalid period validation, no-data state, stable JSON response і real CSV response; виконати backend build, реальні HTTP checks, оновити README і `PROMPTS_LOG.md`, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач повідомив, що Етап 10 завершено в `feat/task-autocomplete`, і попросив виконати git lifecycle цієї branch, створити `feat/reports-csv` та реалізувати тільки Етап 11 — Reports + CSV backend. Scope: `/api/reports`, reports за day/week/month, totals, grouped output, CSV export, period/date validation, no-data state і локальні HTTP checks із тестовими даними, створеними через існуючі API flows.
+  - Original prompt (verbatim excerpt):
+
+```md
+Поточний стан:
+- останній завершений етап — **Етап 10 — Task autocomplete backend**
+- поточна branch: `feat/task-autocomplete`
+- далі за roadmap треба перейти до **Етапу 11 — Reports + CSV backend**
+
+Перед початком роботи виконай git lifecycle для попередньої branch:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Змерджи `feat/task-autocomplete` у `main`
+6. Виконай `git push origin main`
+7. Видали локальну branch:
+   `git branch -d feat/task-autocomplete`
+8. Спробуй видалити remote branch:
+   `git push origin --delete feat/task-autocomplete`
+9. Створи нову branch:
+   `feat/reports-csv`
+10. Переключись у неї і тільки після цього починай Етап 11
+
+Потрібно реалізувати **тільки Етап 11 — Reports + CSV backend** для backend Time Tracker.
+
+Працюй тільки в межах `/api/reports`.
+Зберігай flow:
+`route -> controller -> service -> repository -> model`
+
+Що треба зробити:
+- reports за `day`
+- reports за `week`
+- reports за `month`
+- totals за період
+- grouped output by project, якщо це вже природно випливає з current service layer
+- CSV export endpoint
+
+Рекомендований API contract:
+- `GET /api/reports?period=day|week|month&date=<ISO-date>`
+- `GET /api/reports/export?period=day|week|month&date=<ISO-date>&format=csv`
+
+Обов’язкова логіка:
+- коректне визначення date range для day/week/month
+- totals за період
+- стабільний response contract
+- коректний no data state
+- invalid period має бути провалідований
+- CSV реально генерується у response
+- CSV headers мають бути коректні
+- CSV body не має бути порожнім
+- unified success / error response має лишитися стабільним
+
+Обов’язкові локальні HTTP checks:
+- day report happy path
+- week report happy path
+- month report happy path
+- invalid period
+- no data state
+- CSV export happy path
+- перевірка CSV response headers
+- перевірка, що CSV body не порожній
+
+Після змін виконай:
+1. `git status`
+2. `npm --prefix backend run build`
+3. якщо build падає — виправ тільки те, що стосується Етапу 11
+4. локально перевір reports endpoint’и і CSV export
+5. `git add .`
+6. `git commit -m "feat: implement reports and csv export"`
+7. `git push origin feat/reports-csv`
+```
+
+- Логіка: Використати існуючий `ReportsService` і `TimeEntryRepository.findForReportsByDateRange`, не ламати старі `/api/reports/day|week|month` endpoints, додати єдиний period-based JSON endpoint і CSV export. Date ranges лишилися в service helper layer, validation — у Zod validators, HTTP headers для CSV — у controller.
+- Результат: Reports + CSV backend формально завершено; backend готовий до наступного етапу — Frontend foundation.
+- Змінені файли:
+  - `backend/src/routes/reports.routes.ts`
+  - `backend/src/controllers/reports.controller.ts`
+  - `backend/src/services/reports.service.ts`
+  - `backend/src/validators/reports.validators.ts`
+  - `backend/src/shared/types/service.types.ts`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - завершено lifecycle `feat/task-autocomplete`
+  - `main` актуальний і містить Етап 10
+  - local branch `feat/task-autocomplete` видалено
+  - remote branch `feat/task-autocomplete` видалено
+  - створено branch `feat/reports-csv`
+  - `GET /api/reports?period=day&date=<date>` повертає totals і grouped output
+  - `GET /api/reports?period=week&date=<date>` повертає totals і grouped output
+  - `GET /api/reports?period=month&date=<date>` повертає totals і grouped output
+  - invalid `period=year` повертає 400 validation error
+  - no-data report повертає 200 з `totalDurationMinutes: 0` і empty `groups`
+  - `GET /api/reports/export?period=day&date=<date>&format=csv` повертає 200
+  - CSV `Content-Type` перевірено як `text/csv`
+  - CSV `Content-Disposition` перевірено як attachment
+  - CSV header перевірено: `projectId,taskName,startTime,endTime,durationMinutes,entryDate`
+  - CSV body не порожній і містить тестові report rows
+  - тестові report entries створювалися через Project + Timer API flow, не вручну через MongoDB
+  - backend build не зламано
+  - frontend/Docker не змінювалися
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; тестові time entries, створені для reports checks, прибрані через `DELETE /api/time-entries/:id`. Тестові projects і TaskName documents можуть залишитися в локальній MongoDB як побічні дані перевірки, бо їх delete endpoints не входять у scope Етапу 11.
+
+---
+
 ## Template for next entries
 
 ```md

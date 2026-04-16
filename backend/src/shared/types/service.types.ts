@@ -50,8 +50,18 @@ export interface TaskNameSuggestion {
   lastUsedAt: Date;
 }
 
+export type ReportPeriod = 'day' | 'week' | 'month';
+
 export interface ReportRequest {
   date?: Date;
+}
+
+export interface PeriodReportRequest extends ReportRequest {
+  period: ReportPeriod;
+}
+
+export interface CsvExportRequest extends PeriodReportRequest {
+  format: 'csv';
 }
 
 export interface ServiceTimeEntry {
