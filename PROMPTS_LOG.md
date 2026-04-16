@@ -1004,6 +1004,107 @@ API contract:
 
 ---
 
+## Entry 012 — Task autocomplete backend
+
+- Entry number: Entry 012
+- Етап: Етап 10 — Task autocomplete backend
+- Інструмент: Codex
+- Branch: `feat/task-autocomplete`
+- Порядок виконання: Entry 012
+- Ключовий промпт: Condensed version — завершити lifecycle `feat/today-entries-management`, перейти на актуальний `main`, змерджити/підтвердити Етап 9, видалити local/remote branch, створити `feat/task-autocomplete`; працювати тільки над Етапом 10 у feature group `/api/task-names`: перевірити autocomplete flow, завершити suggestions endpoint, пошук по `TaskName.value`, сортування за `lastUsedAt`, limit validation, empty/whitespace query як recent, no-results state, unified responses; виконати backend build, реальні локальні HTTP checks, оновити README і `PROMPTS_LOG.md`, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач повідомив, що Етап 9 завершено у `feat/today-entries-management`, і попросив виконати git lifecycle цієї branch, створити `feat/task-autocomplete` та реалізувати тільки Етап 10 — Task autocomplete backend. Scope: `/api/task-names`, endpoint `GET /api/task-names/suggestions?query=<text>&limit=<number>`, пошук по `TaskName.value`, recent suggestions без query, сортування за `lastUsedAt`, validation `limit`, no-results state, реальні HTTP checks, без reports/CSV/frontend/Docker.
+  - Original prompt (verbatim excerpt):
+
+```md
+Поточний стан:
+- останній завершений етап — **Етап 9 — Today entries management backend**
+- поточна branch: `feat/today-entries-management`
+- далі за roadmap треба перейти до **Етапу 10 — Task autocomplete backend**
+
+Перед початком роботи виконай git lifecycle для попередньої branch:
+
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Змерджи `feat/today-entries-management` у `main`
+6. Виконай `git push origin main`
+7. Видали локальну branch:
+   `git branch -d feat/today-entries-management`
+8. Спробуй видалити remote branch:
+   `git push origin --delete feat/today-entries-management`
+9. Створи нову branch:
+   `feat/task-autocomplete`
+10. Переключись у неї і тільки після цього починай Етап 10
+
+Потрібно реалізувати **тільки Етап 10 — Task autocomplete backend** для backend Time Tracker.
+
+Scope цього етапу:
+- endpoint для отримання task name suggestions
+- пошук по `TaskName.value`
+- сортування за `lastUsedAt`
+- limit
+- фільтрація за введеним текстом
+
+Працюй тільки в межах feature group `/api/task-names`.
+Зберігай flow:
+`route -> controller -> service -> repository -> model`
+
+Рекомендований endpoint:
+- `GET /api/task-names/suggestions?query=<text>&limit=<number>`
+
+Обов’язкова логіка:
+- якщо `query` порожній або відсутній — повертати recent task names
+- recent task names мають бути відсортовані за `lastUsedAt`
+- якщо `query` переданий — фільтрувати по `TaskName.value`
+- `limit` має бути валідований
+- no results state має бути коректним
+- unified success / error response має лишитися стабільним
+
+Обов’язкові локальні HTTP checks:
+- recent suggestions без query
+- filtered suggestions із query
+- whitespace-only query
+- invalid limit
+- no results state
+
+Після змін виконай:
+1. `git status`
+2. `npm --prefix backend run build`
+3. якщо build падає — виправ тільки те, що стосується Етапу 10
+4. локально перевір autocomplete endpoint
+5. `git add .`
+6. `git commit -m "feat: implement task autocomplete endpoint"`
+7. `git push origin feat/task-autocomplete`
+```
+
+- Логіка: Підтвердити існуючий autocomplete flow і не переписувати його без потреби. Додано стабільний service-level response shape для task suggestions (`id`, `value`, `lastUsedAt`) замість повернення raw Mongoose documents, при цьому query/recent вибір лишився в service, а пошук, limit і sort — у repository layer.
+- Результат: Task autocomplete backend формально завершено; backend готовий до наступного етапу — Reports + CSV backend.
+- Змінені файли:
+  - `backend/src/services/task-autocomplete.service.ts`
+  - `backend/src/shared/types/service.types.ts`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - завершено lifecycle `feat/today-entries-management`
+  - `main` актуальний і містить Етап 9
+  - local branch `feat/today-entries-management` видалено
+  - remote branch `feat/today-entries-management` видалено
+  - створено branch `feat/task-autocomplete`
+  - `GET /api/task-names/suggestions?limit=5` повертає recent suggestions, відсортовані за `lastUsedAt` desc
+  - `GET /api/task-names/suggestions?query=<text>&limit=2` повертає filtered suggestions із застосованим limit
+  - whitespace-only query працює як recent suggestions
+  - invalid `limit=0` повертає 400 validation error
+  - no-results query повертає 200 з empty data array
+  - `GET /api/task-names/recent?limit=3` лишився доступним і стабільним
+  - тестові TaskName створювалися через Project + Timer API flow, не вручну через MongoDB
+  - backend build не зламано
+  - reports/CSV/frontend/Docker не змінювалися
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; тестові time entries, створені для генерації TaskName через timer flow, прибрані через `DELETE /api/time-entries/:id`. Тестові projects і TaskName documents можуть залишитися в локальній MongoDB як побічні дані перевірки, бо їх delete endpoints не входять у scope Етапу 10.
+
+---
+
 ## Template for next entries
 
 ```md
