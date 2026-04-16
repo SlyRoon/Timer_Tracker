@@ -3,8 +3,12 @@ import { TrackerForm } from './components/TrackerForm';
 import { TrackerMessage } from './components/TrackerMessage';
 import { useTracker } from './useTracker';
 
-export function TrackerFoundation() {
-  const tracker = useTracker();
+type TrackerFoundationProps = {
+  onTimerStopped?: () => void | Promise<void>;
+};
+
+export function TrackerFoundation({ onTimerStopped }: TrackerFoundationProps) {
+  const tracker = useTracker({ onTimerStopped });
 
   return (
     <div className="space-y-5">

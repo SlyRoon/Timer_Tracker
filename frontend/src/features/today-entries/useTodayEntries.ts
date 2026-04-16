@@ -25,7 +25,7 @@ function getErrorMessage(error: unknown) {
   return 'Something went wrong. Try again.';
 }
 
-export function useTodayEntries() {
+export function useTodayEntries(refreshSignal = 0) {
   const [entries, setEntries] = useState<TimeEntry[]>([]);
   const [groups, setGroups] = useState<TodayEntryGroup[]>([]);
   const [totals, setTotals] = useState<ProjectTotal[]>([]);
@@ -66,7 +66,7 @@ export function useTodayEntries() {
 
   useEffect(() => {
     loadTodayEntries();
-  }, [loadTodayEntries]);
+  }, [loadTodayEntries, refreshSignal]);
 
   const runEntryUpdate = async (
     entryId: string,
