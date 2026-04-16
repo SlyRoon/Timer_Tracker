@@ -22,6 +22,11 @@ export interface TimeEntry {
   entryDate: string;
 }
 
+export interface StartTimerPayload {
+  taskName: string;
+  projectId: string;
+}
+
 export type ReportPeriod = 'day' | 'week' | 'month';
 
 export interface DateRange {
