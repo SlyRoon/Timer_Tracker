@@ -703,6 +703,96 @@ Controllers повинні працювати **тільки через service 
 
 ---
 
+## Entry 009 — Project CRUD
+
+- Entry number: Entry 009
+- Етап: Етап 7 — Project CRUD
+- Інструмент: Codex
+- Branch: `feat/project-crud`
+- Порядок виконання: Entry 009
+- Ключовий промпт: Condensed version — завершити lifecycle `feat/backend-routes`, підтягнути `main`, змерджити/підтвердити routes wiring, видалити local/remote branch, створити `feat/project-crud`; працювати тільки над Етапом 7: перевірити Project CRUD по всіх шарах, не переписувати коректну реалізацію без потреби, закрити тільки нестачі, перевірити edge cases, вирівняти Mongo DB name на `time_tracker`, оновити `.env.example`, README і `PROMPTS_LOG.md`, виконати backend build, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач повідомив, що Етап 6 завершено і локально протестовано health + Project CRUD happy path та базові validation/error cases. Потрібно завершити git lifecycle `feat/backend-routes`, створити `feat/project-crud` і формально закрити Етап 7 — Project CRUD. Scope: перевірити create/get all/update project і edge cases по всіх шарах `route -> controller -> service -> repository -> model`, не переходити до timer/today/autocomplete/reports/frontend/Docker, вирівняти MongoDB URI на `time_tracker`, оновити README, `.env.example`, `PROMPTS_LOG.md`, виконати build, commit і push.
+  - Original prompt (verbatim excerpt):
+
+```md
+Поточний стан:
+- останній формально завершений етап у `PROMPTS_LOG.md` — **Етап 6 — Routes wiring**
+- поточна branch: `feat/backend-routes`
+- локально вже протестовано:
+  - `GET /api/health`
+  - `POST /api/projects`
+  - `GET /api/projects`
+  - `PATCH /api/projects/:id`
+- happy path працює
+- базові validation/error cases теж перевірені вручну і не ламають сервер
+
+Тепер потрібно перейти до **Етапу 7 — Project CRUD** і формально завершити його в окремій branch.
+
+Перед початком роботи ти ОБОВ’ЯЗКОВО повинен сам пройти git flow для попередньої feature branch.
+
+Виконай послідовно:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Змерджи `feat/backend-routes` у `main`
+6. Виконай `git push origin main`
+7. Видали локальну branch:
+   `git branch -d feat/backend-routes`
+8. Спробуй видалити remote branch:
+   `git push origin --delete feat/backend-routes`
+9. Створи нову branch:
+   `feat/project-crud`
+10. Переключись у неї і тільки після цього починай Етап 7
+
+Потрібно реалізувати **тільки Етап 7 — Project CRUD** для backend Time Tracker.
+
+Що треба зробити в межах цього етапу:
+- перевірити поточну реалізацію project CRUD
+- якщо `create project`, `get all projects`, `update project` уже реалізовані коректно, не переписувати їх без потреби
+- закрити лише те, чого ще бракує для формального завершення Етапу 7
+- переконатися, що Project CRUD стабільний і узгоджений по всіх шарах:
+  `route -> controller -> service -> repository -> model`
+
+Окремо перевір Mongo/env alignment:
+- локальна MongoDB база має бути:
+  `time_tracker`
+- якщо в `.env.example`, README або інших документах досі стоїть `time-tracker`, виправити на `time_tracker`
+
+Після змін виконай:
+1. `git status`
+2. `npm --prefix backend run build`
+3. якщо build падає — виправ тільки те, що стосується Етапу 7
+4. `git add .`
+5. `git commit -m "feat: implement project crud endpoints"`
+6. `git push origin feat/project-crud`
+```
+
+- Логіка: Перевірити й формально закрити Project CRUD без переписування вже коректної реалізації; підтвердити стабільний flow через routes/controllers/services/repositories/models і вирівняти MongoDB URI на `time_tracker`.
+- Результат: Project CRUD формально завершено; backend готовий до наступного етапу — Timer start / stop backend.
+- Змінені файли:
+  - `.env.example`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - завершено lifecycle `feat/backend-routes`
+  - створено branch `feat/project-crud`
+  - `POST /api/projects` реалізовано через route/controller/service/repository/model
+  - `GET /api/projects` реалізовано через route/controller/service/repository/model
+  - `GET /api/projects/:id` реалізовано через route/controller/service/repository/model
+  - `PATCH /api/projects/:id` реалізовано через route/controller/service/repository/model
+  - empty `name` і empty `color` покриті Zod validation
+  - invalid project id покритий Zod validation
+  - not found project id мапиться через `ServiceError` у unified error response
+  - empty update payload покритий Zod validation і service guard
+  - happy path і базові validation/error cases перевірені вручну користувачем локально
+  - `.env.example` використовує MongoDB database `time_tracker`
+  - backend build не зламано
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; локальні pre-existing `.env.example` і template-правка `PROMPTS_LOG.md` були збережені через stash і перенесені в branch `feat/project-crud`.
+
+---
+
 ## Template for next entries
 
 ```md
@@ -719,9 +809,6 @@ Controllers повинні працювати **тільки через service 
 - Змінені файли:
   - `path/to/file`
 - Що перевірено:
-  - ...
-- Мінімальні ручні правки:
-- Follow-up prompts:
   - ...
 ```
 
