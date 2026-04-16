@@ -793,6 +793,99 @@ Controllers повинні працювати **тільки через service 
 
 ---
 
+## Entry 010 — Timer start / stop backend
+
+- Entry number: Entry 010
+- Етап: Етап 8 — Timer start / stop backend
+- Інструмент: Codex
+- Branch: `feat/time-entry-start-stop`
+- Порядок виконання: Entry 010
+- Ключовий промпт: Condensed version — завершити lifecycle `feat/project-crud`, підтягнути `main`, змерджити/підтвердити Project CRUD, видалити local/remote branch, створити `feat/time-entry-start-stop`; працювати тільки над Етапом 8: перевірити timer start/stop/active flow по всіх шарах, не дублювати вже коректну реалізацію, закрити лише нестачі, перевірити happy paths і edge cases, не переходити до today entries/autocomplete/reports/frontend/Docker, оновити README і `PROMPTS_LOG.md`, виконати backend build, локально перевірити timer endpoints, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач повідомив, що Етап 7 — Project CRUD формально завершено, і попросив перейти до Етапу 8 — Timer start / stop backend. Перед роботою потрібно виконати git lifecycle для `feat/project-crud`, створити branch `feat/time-entry-start-stop`, перевірити або завершити `POST /api/timer/start`, `POST /api/timer/stop`, `GET /api/timer/active`, підтвердити one-active-timer rule, project existence, task name validation, duration calculation, `entryDate`, `TaskName.lastUsedAt`, unified responses і ServiceError HTTP mapping, не переходити до today entries, autocomplete endpoint scope, reports/CSV, frontend або Docker.
+  - Original prompt (verbatim excerpt):
+
+```md
+Поточний стан:
+- останній формально завершений етап у `PROMPTS_LOG.md` — **Етап 7 — Project CRUD**
+- поточна branch: `feat/project-crud`
+- Project CRUD уже формально закритий
+- далі за roadmap треба перейти до **Етапу 8 — Timer start / stop backend**
+
+Перед початком роботи ти ОБОВ’ЯЗКОВО повинен сам пройти git flow для попередньої feature branch.
+
+Виконай послідовно:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Змерджи `feat/project-crud` у `main`
+6. Виконай `git push origin main`
+7. Видали локальну branch:
+   `git branch -d feat/project-crud`
+8. Спробуй видалити remote branch:
+   `git push origin --delete feat/project-crud`
+9. Створи нову branch:
+   `feat/time-entry-start-stop`
+10. Переключись у неї і тільки після цього починай Етап 8
+
+Потрібно реалізувати **тільки Етап 8 — Timer start / stop backend** для backend Time Tracker.
+
+У межах цього етапу треба реалізувати або завершити:
+- `POST /api/timer/start`
+- `POST /api/timer/stop`
+- `GET /api/timer/active`
+
+Логіка, яка обов’язково має бути закрита:
+- старт нового запису часу
+- перевірка, що `projectId` існує
+- перевірка, що `taskName` валідний і не порожній
+- заборона старту другого активного таймера, якщо вже існує active entry
+- збереження `startTime`
+- коректне визначення `entryDate`
+- stop тільки для поточного active entry
+- збереження `endTime`
+- стабільний розрахунок `durationMinutes`
+- повернення active timer окремим endpoint’ом
+- оновлення або створення `TaskName` з `lastUsedAt` при старті / стопі таймера
+
+Після змін виконай:
+1. `git status`
+2. `npm --prefix backend run build`
+3. якщо build падає — виправ тільки те, що стосується Етапу 8
+4. локально перевір timer endpoints
+5. `git add .`
+6. `git commit -m "feat: implement timer start stop flow"`
+7. `git push origin feat/time-entry-start-stop`
+```
+
+- Логіка: Перевірити й формально закрити timer start/stop backend без переписування вже коректної реалізації; підтвердити стабільний flow через routes/controllers/services/repositories/models, one-active-timer rule, duration calculation, active timer response і `TaskName.lastUsedAt`.
+- Результат: Timer start / stop backend формально завершено; backend готовий до наступного етапу — Today entries management backend.
+- Змінені файли:
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - завершено lifecycle `feat/project-crud`
+  - створено branch `feat/time-entry-start-stop`
+  - `POST /api/timer/start` реалізовано через route/controller/service/repository/model
+  - `POST /api/timer/stop` реалізовано через route/controller/service/repository/model
+  - `GET /api/timer/active` реалізовано через route/controller/service/repository/model
+  - `projectId` existence перевіряється через service/repository
+  - empty або missing `taskName` покрито Zod validation
+  - missing або invalid `projectId` покрито Zod validation
+  - non-existent `projectId` мапиться через `ServiceError` у unified 404 response
+  - повторний start при active timer мапиться через `ServiceError` у unified 409 response
+  - stop без active timer мапиться через `ServiceError` у unified 404 response
+  - start happy path перевірено через локальний HTTP endpoint
+  - stop happy path перевірено через локальний HTTP endpoint
+  - get active timer happy path і no-active state перевірено через локальний HTTP endpoint
+  - `TaskName.lastUsedAt` створюється або оновлюється при timer flow
+  - MongoDB database лишається `time_tracker`
+  - backend build не зламано
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; реалізація timer flow вже була коректно зібрана в попередніх шарах, тому в межах Етапу 8 оновлено тільки документацію і prompt log.
+
+---
+
 ## Template for next entries
 
 ```md
