@@ -1220,6 +1220,116 @@ Scope цього етапу:
 
 ---
 
+## Entry 014 — Frontend foundation
+
+- Entry number: Entry 014
+- Етап: Етап 12 — Frontend foundation
+- Інструмент: Codex
+- Branch: `feat/frontend-foundation`
+- Порядок виконання: Entry 014
+- Ключовий промпт: Condensed version — завершити lifecycle `feat/reports-csv`, перейти на актуальний `main`, змерджити/підтвердити Етап 11, видалити local/remote branch, створити `feat/frontend-foundation`; працювати тільки над Етапом 12 у `frontend/`: app shell, routing, base pages для tracker/projects/reports, api layer, shared types, hooks/features foundation; не переходити до Tracker UI, не робити business UI flows, не змінювати backend/Docker; виконати frontend build, перевірити локальний старт, оновити README і `PROMPTS_LOG.md`, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач повідомив, що Етап 11 завершено в `feat/reports-csv`, і попросив виконати git lifecycle цієї branch, створити `feat/frontend-foundation` та реалізувати тільки Етап 12 — Frontend foundation. Scope: тільки `frontend/`, app shell/layout, routing, базові сторінки tracker/projects/reports, папки pages/components/features/hooks/api/types/utils/shared, API client layer, shared frontend types, базові hooks/features skeletons, без Tracker UI, projects UI, reports UI функціоналу, backend рефактору, Docker або переходу до Етапу 13.
+  - Original prompt (verbatim excerpt):
+
+```md
+Поточний стан:
+- останній завершений етап — **Етап 11 — Reports + CSV backend**
+- поточна branch: `feat/reports-csv`
+- далі за roadmap треба перейти до **Етапу 12 — Frontend foundation**
+
+Перед початком роботи виконай git lifecycle для попередньої branch:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Змерджи `feat/reports-csv` у `main`
+6. Виконай `git push origin main`
+7. Видали локальну branch:
+   `git branch -d feat/reports-csv`
+8. Спробуй видалити remote branch:
+   `git push origin --delete feat/reports-csv`
+9. Створи нову branch:
+   `feat/frontend-foundation`
+10. Переключись у неї і тільки після цього починай Етап 12
+
+Потрібно реалізувати **тільки Етап 12 — Frontend foundation** для Time Tracker.
+
+Ціль етапу:
+створити чистий frontend skeleton, який буде готовий до наступних UI-етапів.
+
+У межах цього етапу потрібно:
+1. зробити базовий app shell / layout
+2. налаштувати routing
+3. створити base pages / sections:
+   - tracker
+   - projects
+   - reports
+4. створити або стабілізувати папки:
+   - pages
+   - components
+   - features
+   - hooks
+   - api
+   - types
+   - utils
+   - shared
+5. створити API client layer для backend requests
+6. створити shared frontend types для основних backend contracts
+7. створити базові hooks / feature skeletons там, де це потрібно
+8. зробити shell pages без важкої бізнес-логіки
+
+Перевірки після змін:
+1. `git status`
+2. `npm --prefix frontend run build`
+3. якщо build падає — виправ тільки те, що стосується Етапу 12
+4. перевір, що frontend стартує локально
+5. `git add .`
+6. `git commit -m "feat: implement frontend foundation"`
+7. `git push origin feat/frontend-foundation`
+```
+
+- Логіка: Побудувати frontend foundation без нових залежностей і без функціональної бізнес-логіки. Routing реалізовано як легкий hash routing у hook layer, щоб не змінювати стек; page components залишені тонкими і делегують базовий UI у feature skeletons; API calls ізольовано в api layer; shared contracts винесені в frontend types.
+- Результат: Frontend skeleton готовий до наступного етапу — Tracker UI. Є app shell, навігація між tracker/projects/reports, base pages, API client, frontend shared types, utility foundation і clean folder structure.
+- Змінені файли:
+  - `frontend/src/App.tsx`
+  - `frontend/src/components/AppShell.tsx`
+  - `frontend/src/hooks/useHashRoute.ts`
+  - `frontend/src/shared/routes.ts`
+  - `frontend/src/pages/TrackerPage.tsx`
+  - `frontend/src/pages/ProjectsPage.tsx`
+  - `frontend/src/pages/ReportsPage.tsx`
+  - `frontend/src/features/tracker/TrackerFoundation.tsx`
+  - `frontend/src/features/projects/ProjectsFoundation.tsx`
+  - `frontend/src/features/reports/ReportsFoundation.tsx`
+  - `frontend/src/api/http-client.ts`
+  - `frontend/src/api/index.ts`
+  - `frontend/src/types/domain.ts`
+  - `frontend/src/types/http.ts`
+  - `frontend/src/types/index.ts`
+  - `frontend/src/utils/format-duration.ts`
+  - `frontend/src/vite-env.d.ts`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - завершено lifecycle `feat/reports-csv`
+  - `main` актуальний і містить Етап 11
+  - local branch `feat/reports-csv` видалено
+  - remote branch `feat/reports-csv` видалено
+  - створено branch `feat/frontend-foundation`
+  - frontend app shell створено
+  - hash routing між tracker/projects/reports працює на рівні shell
+  - base pages і feature skeletons створено без business UI flows
+  - API client layer створено без викликів із presentation components
+  - shared frontend types для backend contracts створено
+  - `npm --prefix frontend run build` проходить
+  - Vite dev server локально стартує і повертає HTTP 200
+  - backend/Docker не змінювалися
+  - Етап 13 — Tracker UI не починався
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; build/dev-server запуск Vite потребував escalation через sandbox `spawn EPERM`, після перевірки dev server зупинено.
+
+---
+
 ## Template for next entries
 
 ```md
