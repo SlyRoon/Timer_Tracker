@@ -1,4 +1,4 @@
-import type { Project } from '../types';
+import type { CreateProjectPayload, Project, UpdateProjectPayload } from '../types';
 import { requestData } from './http-client';
 
 interface ProjectResponse extends Omit<Project, 'id'> {
@@ -18,4 +18,28 @@ export async function getProjects() {
   const projects = await requestData<ProjectResponse[]>('/projects');
 
   return projects.map(toProject);
+}
+
+export async function createProject(payload: CreateProjectPayload) {
+  const project = await requestData<ProjectResponse>('/projects', {
+    body: payload,
+    method: 'POST',
+  });
+
+  return toProject(project);
+}
+
+export async function updateProject(
+  projectId: string,
+  payload: UpdateProjectPayload,
+) {
+  const project = await requestData<ProjectResponse>(
+    `/projects/${encodeURIComponent(projectId)}`,
+    {
+      body: payload,
+      method: 'PATCH',
+    },
+  );
+
+  return toProject(project);
 }

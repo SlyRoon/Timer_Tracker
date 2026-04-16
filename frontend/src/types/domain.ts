@@ -6,6 +6,16 @@ export interface Project {
   updatedAt?: string;
 }
 
+export interface CreateProjectPayload {
+  name: string;
+  color: string;
+}
+
+export interface UpdateProjectPayload {
+  name?: string;
+  color?: string;
+}
+
 export interface TaskName {
   id: string;
   value: string;

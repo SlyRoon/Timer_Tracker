@@ -100,7 +100,7 @@ export function TrackerForm({
 
       {projects.length === 0 && !isLoadingProjects ? (
         <p className="mt-4 text-sm text-zinc-600">
-          Add a project through the backend API before starting a timer.
+          Create a project from the Projects page before starting a timer.
         </p>
       ) : null}
     </form>

@@ -4,7 +4,7 @@ export {
   startTimer,
   stopTimer,
 } from './timer-api';
-export { getProjects } from './projects-api';
+export { createProject, getProjects, updateProject } from './projects-api';
 export { getTaskSuggestions } from './task-names-api';
 export {
   deleteTimeEntry,

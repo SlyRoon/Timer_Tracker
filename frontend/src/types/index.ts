@@ -1,4 +1,5 @@
 export type {
+  CreateProjectPayload,
   DateRange,
   PeriodReport,
   Project,
@@ -13,5 +14,6 @@ export type {
   UpdateEntryManualTimePayload,
   UpdateEntryProjectPayload,
   UpdateEntryTaskNamePayload,
+  UpdateProjectPayload,
 } from './domain';
 export type { ApiError, ApiResponse, ApiSuccess } from './http';

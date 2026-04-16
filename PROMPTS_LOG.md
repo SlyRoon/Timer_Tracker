@@ -1547,6 +1547,106 @@ Scope цього етапу:
 
 ---
 
+## Entry 017 — Projects UI
+
+- Entry number: Entry 017
+- Етап: Етап 15 — Projects UI
+- Інструмент: Codex
+- Branch: `feat/frontend-projects-ui`
+- Порядок виконання: Entry 017
+- Ключовий промпт: Condensed version — завершити lifecycle `feat/frontend-today-entries`, перейти на актуальний `main`, підтвердити merge стан Етапу 14, видалити local/remote branch, створити `feat/frontend-projects-ui`; працювати тільки над Етапом 15 у `frontend/`: project list, create project form, update project form, color picker або простий color selection, color display, loading/error/empty states; не переходити до Reports UI, не змінювати backend без крайньої потреби, не додавати бібліотеки; виконати frontend build, локально запустити frontend, перевірити projects UI flow, оновити README і `PROMPTS_LOG.md`, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач повідомив, що Етап 14 завершено в `feat/frontend-today-entries`, і попросив виконати git lifecycle цієї branch, створити `feat/frontend-projects-ui` та реалізувати тільки Етап 15 — Projects UI. Scope: тільки `frontend/`, використати готові backend endpoints для projects, зробити список проєктів, create/update форми, color picker / color selection, відображення кольору, loading/error/empty states, без Reports UI, backend змін, Docker або переходу до Етапу 16.
+  - Original prompt (verbatim excerpt):
+
+```md
+Поточний стан:
+- останній завершений етап — **Етап 14 — Today entries UI**
+- поточна branch: `feat/frontend-today-entries`
+- далі за roadmap треба перейти до **Етапу 15 — Projects UI**
+
+Перед початком роботи виконай git lifecycle для попередньої branch:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Змерджи `feat/frontend-today-entries` у `main`
+6. Виконай `git push origin main`
+7. Видали локальну branch:
+   `git branch -d feat/frontend-today-entries`
+8. Спробуй видалити remote branch:
+   `git push origin --delete feat/frontend-today-entries`
+9. Створи нову branch:
+   `feat/frontend-projects-ui`
+10. Переключись у неї і тільки після цього починай Етап 15
+
+Потрібно реалізувати **тільки Етап 15 — Projects UI** для Time Tracker.
+
+Що треба реалізувати:
+1. список проєктів
+2. create project form
+3. update project form
+4. color picker або простий вибір кольору
+5. відображення кольору в UI
+6. loading / error / empty states
+
+Архітектурні правила:
+- не звалювати все в один page component
+- винести list / form / item row у компоненти
+- тримати API calls в api layer
+- тримати form/update logic у hooks або feature layer
+- не ламати tracker UI і today entries UI
+
+Перевірки після змін:
+1. `git status`
+2. `npm --prefix frontend run build`
+3. якщо build падає — виправ тільки те, що стосується Етапу 15
+4. локально запусти frontend
+5. перевір projects UI flow руками:
+   - список проєктів
+   - create project
+   - update project
+   - color selection visible
+6. `git add .`
+7. `git commit -m "feat: implement projects ui flow"`
+8. `git push origin feat/frontend-projects-ui`
+```
+
+- Логіка: Projects API розширено create/update методами; Projects UI винесено в feature hook `useProjects`, create form, list, item row, color field і message components. Page component залишився тонким, API calls лишаються в api layer, form/update side effects — у feature hook. Backend не змінювався.
+- Результат: Projects UI flow реалізовано; користувач може відкрити projects page, побачити список проєктів, створити project, змінити name/color, бачити color picker/preset selection і swatch у списку, а UI оновлюється без перезавантаження. Frontend готовий до наступного етапу — Reports UI.
+- Змінені файли:
+  - `frontend/src/api/index.ts`
+  - `frontend/src/api/projects-api.ts`
+  - `frontend/src/features/projects/ProjectsFoundation.tsx`
+  - `frontend/src/features/projects/useProjects.ts`
+  - `frontend/src/features/projects/components/ProjectForm.tsx`
+  - `frontend/src/features/projects/components/ProjectItemRow.tsx`
+  - `frontend/src/features/projects/components/ProjectColorField.tsx`
+  - `frontend/src/features/projects/components/ProjectsList.tsx`
+  - `frontend/src/features/projects/components/ProjectsMessage.tsx`
+  - `frontend/src/features/tracker/components/TrackerForm.tsx`
+  - `frontend/src/types/domain.ts`
+  - `frontend/src/types/index.ts`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - завершено lifecycle `feat/frontend-today-entries`
+  - `main` актуальний і містить Етап 14
+  - local branch `feat/frontend-today-entries` видалено
+  - remote branch `feat/frontend-today-entries` видалено
+  - створено branch `feat/frontend-projects-ui`
+  - `npm --prefix frontend run build` проходить
+  - frontend dev server локально стартує і projects page повертає HTTP 200
+  - backend health check на тимчасовому port повертає HTTP 200
+  - `POST /api/projects` створює тестовий project і повертає HTTP 201
+  - `PATCH /api/projects/:id` оновлює name/color і повертає HTTP 200
+  - `GET /api/projects` повертає створений/оновлений project і повертає HTTP 200
+  - headless Chrome DOM для `#/projects` містить Projects page, create form, project list, color controls, save actions і оновлений project
+  - backend code, Docker і Reports UI не змінювалися
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; локальна перевірка запускала backend/frontend dev servers на тимчасових портах і зупинила їх після перевірки. Тестові project documents можуть залишитися в локальній MongoDB як побічні дані перевірки, бо project delete не входить у поточний UI scope.
+
+---
+
 ## Template for next entries
 
 ```md
