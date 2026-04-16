@@ -1647,6 +1647,110 @@ Scope цього етапу:
 
 ---
 
+## Entry 018 — Reports UI
+
+- Entry number: Entry 018
+- Етап: Етап 16 — Reports UI
+- Інструмент: Codex
+- Branch: `feat/frontend-reports-ui`
+- Порядок виконання: Entry 018
+- Ключовий промпт: Condensed version — завершити lifecycle `feat/frontend-projects-ui`, перейти на актуальний `main`, змерджити Етап 15, запушити `main`, видалити local/remote branch, створити `feat/frontend-reports-ui`; працювати тільки над Етапом 16 у `frontend/`: reports page, перемикач period day/week/month, totals, grouped output або table, CSV export button, loading/error/empty states; не переходити до Integration polish, не змінювати backend без крайньої потреби, не додавати бібліотеки; виконати frontend build, локально запустити frontend, перевірити reports UI flow, оновити README і `PROMPTS_LOG.md`, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач повідомив, що Етап 15 завершено в `feat/frontend-projects-ui`, і попросив виконати git lifecycle цієї branch, створити `feat/frontend-reports-ui` та реалізувати тільки Етап 16 — Reports UI. Scope: тільки `frontend/`, використати готові backend endpoints для reports і CSV export, зробити reports page, period switch day/week/month, totals, grouped/table view, CSV export button, loading/error/empty states, без Integration polish, backend змін, Docker або переходу до Етапу 17.
+  - Original prompt (verbatim excerpt):
+
+```md
+Поточний стан:
+- останній завершений етап — **Етап 15 — Projects UI**
+- поточна branch: `feat/frontend-projects-ui`
+- далі за roadmap треба перейти до **Етапу 16 — Reports UI**
+
+Перед початком роботи виконай git lifecycle для попередньої branch:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Змерджи `feat/frontend-projects-ui` у `main`
+6. Виконай `git push origin main`
+7. Видали локальну branch:
+   `git branch -d feat/frontend-projects-ui`
+8. Спробуй видалити remote branch:
+   `git push origin --delete feat/frontend-projects-ui`
+9. Створи нову branch:
+   `feat/frontend-reports-ui`
+10. Переключись у неї і тільки після цього починай Етап 16
+
+Потрібно реалізувати **тільки Етап 16 — Reports UI** для Time Tracker.
+
+Що треба реалізувати:
+1. reports page
+2. перемикач period:
+   - day
+   - week
+   - month
+3. відображення totals
+4. відображення grouped output або таблиці
+5. CSV export button
+6. loading / error / empty states
+
+Архітектурні правила:
+- не звалювати все в один page component
+- винести reports controls / report summary / report table або grouped blocks у компоненти
+- тримати API calls в api layer
+- тримати report state, fetch logic і export logic у hooks або feature layer
+- не ламати tracker UI, today entries UI і projects UI
+
+Перевірки після змін:
+1. `git status`
+2. `npm --prefix frontend run build`
+3. якщо build падає — виправ тільки те, що стосується Етапу 16
+4. локально запусти frontend
+5. перевір reports UI flow руками:
+   - day report visible
+   - week report visible
+   - month report visible
+   - totals visible
+   - grouped/table view visible
+   - CSV export button works
+6. `git add .`
+7. `git commit -m "feat: implement reports ui flow"`
+8. `git push origin feat/frontend-reports-ui`
+```
+
+- Логіка: Reports API винесено в `frontend/src/api/reports-api.ts`, CSV export використовує raw backend CSV response через `/api/reports/export`; report state, period/date selection, loading/error state і export side effect винесено в `useReports`; UI розділено на controls, summary, grouped table і message components. Backend не змінювався.
+- Результат: Reports UI flow реалізовано; користувач може відкрити reports page, перемикати day/week/month, бачити totals і grouped report table, запускати CSV export через готовий backend endpoint без перезавантаження сторінки. Frontend готовий до наступного етапу — Integration polish.
+- Змінені файли:
+  - `frontend/src/api/http-client.ts`
+  - `frontend/src/api/index.ts`
+  - `frontend/src/api/reports-api.ts`
+  - `frontend/src/features/reports/ReportsFoundation.tsx`
+  - `frontend/src/features/reports/useReports.ts`
+  - `frontend/src/features/reports/components/ReportControls.tsx`
+  - `frontend/src/features/reports/components/ReportSummary.tsx`
+  - `frontend/src/features/reports/components/ReportGroupedTable.tsx`
+  - `frontend/src/features/reports/components/ReportMessage.tsx`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- Що перевірено:
+  - завершено lifecycle `feat/frontend-projects-ui`
+  - `main` актуальний і містить Етап 15
+  - local branch `feat/frontend-projects-ui` видалено
+  - remote branch `feat/frontend-projects-ui` видалено
+  - створено branch `feat/frontend-reports-ui`
+  - `npm --prefix frontend run build` проходить
+  - frontend dev server локально стартує і reports page повертає HTTP 200
+  - backend health check на тимчасовому port повертає HTTP 200
+  - тестові report дані створено через існуючий Project + Timer API flow
+  - `GET /api/reports?period=day` повертає HTTP 200 і totalDurationMinutes `75`
+  - `GET /api/reports?period=week` повертає HTTP 200 і totalDurationMinutes `75`
+  - `GET /api/reports?period=month` повертає HTTP 200 і totalDurationMinutes `75`
+  - `GET /api/reports/export?period=day&format=csv` повертає HTTP 200, `text/csv`, attachment filename, CSV header і тестовий task row
+  - headless Chrome DOM для `#/reports` містить reports page / controls / summary / table / CSV export UI
+  - backend code, Docker і Integration polish не змінювалися
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex; локальна перевірка запускала backend/frontend dev servers на тимчасових портах і зупинила їх після перевірки. Тестові project/time-entry/task documents можуть залишитися в локальній MongoDB як побічні дані перевірки.
+
+---
+
 ## Template for next entries
 
 ```md

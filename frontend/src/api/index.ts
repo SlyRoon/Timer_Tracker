@@ -1,4 +1,4 @@
-export { ApiRequestError, apiRequest, requestData } from './http-client';
+export { ApiRequestError, apiRequest, getApiUrl, requestData } from './http-client';
 export {
   getActiveTimer,
   startTimer,
@@ -15,3 +15,4 @@ export {
   updateEntryProject,
   updateEntryTaskName,
 } from './time-entries-api';
+export { exportReportCsv, getReport } from './reports-api';
