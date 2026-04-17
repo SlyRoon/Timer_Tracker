@@ -1,172 +1,156 @@
 # Time Tracker
 
-Fullstack Time Tracker application built for an AI Web Developer test task.
+Fullstack Time Tracker для тестового завдання на позицію AI Web Developer. Проєкт реалізований end-to-end: React frontend, Express backend, MongoDB persistence, валідація через Zod, prompt logging, staged AI-first workflow, responsive UI, перемикач мови `uk/en`, accent theme switcher і CSV export для звітів.
 
-The project is implemented end-to-end: React frontend, Express backend, MongoDB persistence, typed API contracts, validation, prompt logging, staged AI-first development workflow, and post-submission frontend polish.
+Це не демо-макет і не scaffold. У репозиторії є робочий frontend, API, MongoDB data layer, typed contracts і розділення відповідальностей між UI, hooks/features, API client, services, repositories та models.
 
-## Project Overview
+## English Quick Overview
 
-Time Tracker helps a user track work by project and task name. The app supports:
+Time Tracker is a fullstack work-time tracking app built as an AI-first test task. It uses React + TypeScript + Vite + TailwindCSS on the frontend, Node.js + Express + TypeScript on the backend, and MongoDB + Mongoose for persistence.
 
-- starting and stopping a timer;
-- viewing the active timer;
-- autocomplete for previously used task names;
-- managing projects and colors;
-- reviewing today's entries;
-- editing task name, project, and manual time corrections in `HH:MM` format;
-- grouping today's entries by project;
-- viewing day, week, and month reports;
-- exporting report data as CSV;
-- switching the UI language between Ukrainian and English;
-- switching the frontend accent color theme.
+Implemented flows include Start/Stop timer, active timer, task autocomplete, project management with colors, today entries editing, grouped project totals, day/week/month reports, CSV export, Ukrainian/English language switching, accent theme switching, and responsive UI polish.
+
+Local run is straightforward: install dependencies, start MongoDB locally, run the backend on `http://localhost:5000/api`, run the frontend on `http://localhost:5173`, then create a project and start tracking time.
+
+## Status / Demo
+
+Current status:
+
+- fullstack app is implemented;
+- backend and frontend builds pass;
+- local MongoDB database name is `time_tracker`;
+- Docker is intentionally not included;
+- live deployment URL is not committed here yet;
+- repository is ready for local review and future deployment.
+
+Demo link placeholder:
+
+```text
+Live URL: add after deployment
+Repository: GitHub repository with this codebase
+```
 
 ## Tech Stack
 
 Frontend:
 
-- React
-- TypeScript
-- Vite
-- TailwindCSS
-- i18next
-- react-i18next
-- react-icons
+- React 19 with TypeScript;
+- Vite for local development and production build;
+- TailwindCSS as the single styling system;
+- `i18next` + `react-i18next` for `uk/en` UI localization;
+- `react-icons` for restrained visual iconography.
 
 Backend:
 
-- Node.js
-- Express
-- TypeScript
+- Node.js;
+- Express;
+- TypeScript;
+- `dotenv` for environment variables;
+- `cors` for frontend/backend integration.
 
-Database:
+Database and validation:
 
-- MongoDB
-- Mongoose
+- MongoDB as the local database;
+- Mongoose for schemas, ObjectId references and model boundaries;
+- Zod for request validation;
+- centralized async/error handling and unified API responses.
 
-Validation and infrastructure:
-
-- Zod
-- dotenv
-- cors
+The stack is intentionally small. There is no Redux, React Query, UI framework, Docker layer or extra infrastructure package added just for convenience.
 
 ## Architecture
 
-The backend follows a layered architecture:
+Backend request flow:
 
 ```text
 route -> controller -> service -> repository -> model -> MongoDB
 ```
 
-Layer responsibilities:
+Backend responsibilities:
 
-- `routes`: register endpoints and attach middleware only.
-- `controllers`: handle HTTP request/response work and call services.
-- `services`: contain business rules and domain flow.
-- `repositories`: isolate all Mongoose data access.
-- `models`: define Mongoose schemas and models only.
-- `validators`: define Zod schemas for body, params, and query.
-- `middlewares`: validation, async handling, and global error handling.
-- `shared`: reusable types, HTTP helpers, errors, and database utilities.
+- `routes` register endpoints and attach validators/middlewares;
+- `controllers` handle HTTP request/response only;
+- `services` contain business rules and domain flow;
+- `repositories` isolate Mongoose data access;
+- `models` define Mongoose schemas/models;
+- `validators` define Zod schemas for `body`, `params` and `query`;
+- `middlewares` handle validation, async wrappers and global errors;
+- `shared` contains database helpers, response helpers, service errors and shared types.
 
-The frontend is organized by pages, feature modules, shared UI, hooks, API clients, and shared types:
+Frontend structure follows the same separation idea:
 
-```text
-frontend/src/
-  api/
-  components/
-  features/
-  hooks/
-  pages/
-  shared/
-  types/
-  utils/
-```
+- `api` contains backend client functions;
+- `features` contain feature-level hooks and UI blocks;
+- `components` contain shell/shared UI components;
+- `pages` are thin route-level wrappers;
+- `hooks` contain shared client-side logic;
+- `i18n` contains language setup and JSON resources;
+- `shared` contains route/theme config;
+- `types` contains shared frontend contracts;
+- `utils` contains formatting/conversion helpers.
 
-Page components stay thin. API calls live in `frontend/src/api`, feature state lives in hooks/features, and UI components are kept mostly presentational.
-
-Frontend localization and theming are kept in dedicated layers:
-
-- `frontend/src/i18n` configures `react-i18next` with JSON resources.
-- `frontend/src/shared/theme.ts` defines accent presets.
-- `frontend/src/hooks/useAccentTheme.ts` applies and persists the selected accent.
-
-## MongoDB Choice
-
-MongoDB + Mongoose is a deliberate choice for this Time Tracker implementation. The domain is document-friendly: projects, task name history, and time entries can be represented cleanly as collections with simple references. Mongoose provides schemas, validation at the persistence boundary, ObjectId references, timestamps, and a lightweight model layer without introducing a heavier SQL/ORM setup.
-
-The local database name is:
-
-```text
-time_tracker
-```
+API calls stay in the API layer. Feature state lives in hooks/features. Presentation components do not talk directly to the backend. The project avoids the “everything in one file” anti-pattern.
 
 ## Implemented Features
 
-Backend:
+Tracker:
 
-- Health check: `GET /api/health`
-- Project CRUD baseline:
-  - create project
-  - list projects
-  - get project by id
-  - update project
-- Timer flow:
-  - start timer
-  - stop active timer
-  - get active timer
-  - prevent multiple active timers
-  - update task name usage metadata
-- Today entries management:
-  - list today's entries
-  - update task name
-  - update project
-  - manual time correction
-  - delete entry
-  - grouped entries by project
-  - totals by project
-- Task autocomplete:
-  - recent task names
-  - filtered suggestions by query
-  - limit validation
-- Reports:
-  - day report
-  - week report
-  - month report
-  - totals and grouped output
-  - CSV export
-- Unified JSON response style for successful and failed API responses.
-- Zod validation and centralized error handling.
+- task name input;
+- task autocomplete based on previous task names;
+- project dropdown;
+- Start / Stop timer;
+- active timer block visible at the top of the tracker screen;
+- prevention of multiple active timers on the backend;
+- task usage metadata update through `TaskName.lastUsedAt`.
 
-Frontend:
+Today entries:
 
-- App shell with navigation.
-- Responsive layout polish for desktop, tablet, and mobile widths.
-- Ukrainian / English language switch with JSON translations and local persistence.
-- Accent color switcher with local persistence.
-- Tracker page:
-  - task input
-  - autocomplete dropdown
-  - project select
-  - start/stop timer flow
-  - active timer panel
-  - loading and error states
-- Today entries UI:
-  - list entries
-  - edit task/project
-  - manual time correction using `HH:MM` input
-  - delete entry
-  - grouped totals
-- Projects UI:
-  - list projects
-  - create project
-  - edit project name and color
-- Reports UI:
-  - day/week/month period switch
-  - totals summary
-  - grouped report table
-  - CSV export button
+- list of today’s time entries;
+- edit task name;
+- edit project;
+- manual time correction;
+- manual duration input in `HH:MM` format on the frontend;
+- delete entry;
+- grouped entries by project;
+- totals by project;
+- loading, error and empty states.
+
+Projects:
+
+- projects page;
+- create project;
+- update project name and color;
+- color display in lists and entry summaries.
+
+Reports:
+
+- day report;
+- week report;
+- month report;
+- period totals;
+- grouped report output;
+- CSV export endpoint and frontend export button.
+
+UI / UX:
+
+- app shell with navigation between Tracker, Projects and Reports;
+- Ukrainian / English language switch with localStorage persistence;
+- default UI language is Ukrainian;
+- accent theme switcher with presets `emerald`, `blue`, `violet`, `amber`, `rose`;
+- accent theme persistence in localStorage;
+- responsive layout polish for mobile, tablet and desktop;
+- visual iconography through `react-icons`;
+- production-like card layout for tracker, today entries, projects and reports.
+
+AI workflow:
+
+- staged AI-first implementation;
+- prompt logging in `PROMPTS_LOG.md`;
+- working rules and architecture constraints in `AI_WORKFLOW.md`;
+- feature branches used for major implementation stages.
 
 ## Project Structure
+
+Compact structure overview:
 
 ```text
 root/
@@ -176,7 +160,6 @@ root/
   .env.example
   backend/
     package.json
-    package-lock.json
     tsconfig.json
     src/
       app.ts
@@ -190,7 +173,6 @@ root/
       shared/
       validators/
   frontend/
-    package-lock.json
     package.json
     tsconfig.json
     vite.config.ts
@@ -208,33 +190,13 @@ root/
       utils/
 ```
 
-## Frontend Polish
-
-The post-submission polish pass added:
-
-- `uk/en` language switching through `react-i18next`;
-- JSON locale resources under `frontend/src/i18n/locales`;
-- localStorage persistence for the selected language;
-- accent theme presets through CSS custom properties;
-- localStorage persistence for the selected accent theme;
-- responsive layout improvements for the app shell, navigation, tracker, today entries, projects, and reports UI;
-- visual design and iconography polish with `react-icons`;
-- `HH:MM` manual duration input in the today entries UI while keeping the backend contract as `durationMinutes`.
-
-Default language is Ukrainian. The UI also supports optional query parameters for verification or direct links:
-
-```text
-http://localhost:5173/?lang=en&accent=rose#/tracker
-http://localhost:5173/?lang=uk&accent=blue#/reports
-```
-
 ## Local Setup
 
 Prerequisites:
 
-- Node.js
-- npm
-- MongoDB running locally on port `27017`
+- Node.js;
+- npm;
+- local MongoDB running on `localhost:27017`.
 
 Install dependencies from the repository root:
 
@@ -243,26 +205,13 @@ npm --prefix backend install
 npm --prefix frontend install
 ```
 
-Start MongoDB locally and make sure this connection works:
+MongoDB local connection:
 
 ```text
 mongodb://localhost:27017/time_tracker
 ```
 
-## Environment Variables
-
-The repository contains `.env.example` with safe local defaults:
-
-```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/time_tracker
-CLIENT_URL=http://localhost:5173
-VITE_API_BASE_URL=http://localhost:5000/api
-```
-
-Do not commit real secrets or private connection strings.
-
-For local PowerShell sessions, you can export the variables before starting the apps:
+Start backend in one terminal:
 
 ```powershell
 $env:PORT="5000"
@@ -271,28 +220,55 @@ $env:CLIENT_URL="http://localhost:5173"
 npm --prefix backend run dev
 ```
 
-In a second terminal:
+Start frontend in another terminal:
 
 ```powershell
 $env:VITE_API_BASE_URL="http://localhost:5000/api"
 npm --prefix frontend run dev
 ```
 
-Open the frontend at:
+Open:
 
 ```text
-http://localhost:5173
+Frontend: http://localhost:5173
+Backend API: http://localhost:5000/api
+Health check: http://localhost:5000/api/health
 ```
 
-The backend API runs at:
+Recommended manual review flow:
 
-```text
-http://localhost:5000/api
+1. Create a project on the Projects page.
+2. Open Tracker.
+3. Enter a task name and start a timer.
+4. Stop the timer.
+5. Review today entries and grouped totals.
+6. Edit task/project/manual time.
+7. Open Reports and export CSV.
+8. Switch language and accent theme.
+
+## Environment Variables
+
+The repository includes `.env.example` as a safe reference:
+
+```env
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/time_tracker
+CLIENT_URL=http://localhost:5173
+VITE_API_BASE_URL=http://localhost:5000/api
 ```
+
+Meaning:
+
+- `PORT` - backend server port;
+- `MONGODB_URI` - MongoDB connection string;
+- `CLIENT_URL` - frontend origin allowed by backend CORS;
+- `VITE_API_BASE_URL` - frontend API base URL.
+
+Do not commit real secrets. For local runs, either export env variables in the terminal as shown above, or create local untracked env files such as `backend/.env` and `frontend/.env.local`.
 
 ## Available Scripts
 
-Backend:
+Backend scripts:
 
 ```powershell
 npm --prefix backend run dev
@@ -300,12 +276,19 @@ npm --prefix backend run build
 npm --prefix backend run start
 ```
 
-Frontend:
+Frontend scripts:
 
 ```powershell
 npm --prefix frontend run dev
 npm --prefix frontend run build
 npm --prefix frontend run preview
+```
+
+Build checks:
+
+```powershell
+npm --prefix backend run build
+npm --prefix frontend run build
 ```
 
 ## API Overview
@@ -350,13 +333,11 @@ Reports:
 - `GET /api/reports/month?date=<ISO-date>`
 - `GET /api/reports/export?period=day|week|month&date=<ISO-date>&format=csv`
 
-CSV export can be checked in the browser or with a request such as:
+CSV export can be checked directly in the browser after backend startup:
 
 ```text
 http://localhost:5000/api/reports/export?period=day&date=2026-04-17&format=csv
 ```
-
-## Response Style
 
 Successful JSON responses use:
 
@@ -379,82 +360,78 @@ Error responses use:
 }
 ```
 
-Common error mappings:
+Service error mapping:
 
-- `VALIDATION_ERROR` -> `400`
-- `NOT_FOUND` -> `404`
-- `CONFLICT` -> `409`
-- unknown errors -> `500`
+- `VALIDATION_ERROR` -> `400`;
+- `NOT_FOUND` -> `404`;
+- `CONFLICT` -> `409`;
+- unknown errors -> `500`.
 
 ## AI-First Workflow
 
-This project was developed stage by stage with Codex as an AI engineering agent.
+This project was built stage by stage with Codex as an AI engineering agent. The repository includes two workflow artifacts:
 
-Workflow files:
+- `AI_WORKFLOW.md` - rules, stack, architecture constraints, roadmap and git workflow;
+- `PROMPTS_LOG.md` - key prompts, stage summaries, changed files and verification notes.
 
-- `AI_WORKFLOW.md` defines the working rules, architecture constraints, allowed stack, staged roadmap, git workflow, and prompt logging policy.
-- `PROMPTS_LOG.md` records the key implementation prompts and results for each major stage.
+The implementation intentionally avoided one-shot generation. Major features were developed in separate branches, verified with builds or local checks, then merged forward. This makes the work easier to review and keeps the prompt history reproducible.
 
-The project intentionally avoided generating everything in one pass. Each large feature was implemented in a separate branch and merged only after build or local verification.
+## MongoDB + Mongoose Rationale
+
+MongoDB + Mongoose is a practical fit for this Time Tracker. The core data is document-friendly: projects, task name history and time entries are simple collections with clear references. Mongoose adds schemas, timestamps, ObjectId references and a clean model boundary while keeping the persistence layer lightweight.
+
+The repository keeps all database access inside repositories, so the rest of the backend does not depend directly on Mongoose models.
 
 ## Deployment Notes
 
-No Docker setup is included. Docker was intentionally kept out of scope for this staged implementation.
+There is no Docker setup in this repository.
 
-Backend deployment:
+Suggested production setup:
 
-1. Configure production environment variables:
+1. Deploy MongoDB to a hosted provider such as MongoDB Atlas.
+2. Deploy backend to a Node-capable platform.
+3. Set backend env variables:
    - `PORT`
    - `MONGODB_URI`
    - `CLIENT_URL`
-2. Use a hosted MongoDB instance such as MongoDB Atlas.
-3. Build the backend:
+4. Build and start backend:
 
 ```powershell
 npm --prefix backend run build
-```
-
-4. Run the compiled server:
-
-```powershell
 npm --prefix backend run start
 ```
 
-Frontend deployment:
-
-1. Set `VITE_API_BASE_URL` to the deployed backend API URL.
-2. Build the frontend:
+5. Deploy frontend as a static Vite build.
+6. Set frontend `VITE_API_BASE_URL` to the deployed backend API URL.
+7. Build frontend:
 
 ```powershell
 npm --prefix frontend run build
 ```
 
-3. Publish `frontend/dist` to a static hosting provider.
+8. Publish `frontend/dist`.
 
-The frontend and backend can be deployed separately. Make sure backend CORS `CLIENT_URL` matches the deployed frontend URL.
+Make sure backend CORS `CLIENT_URL` matches the deployed frontend URL.
 
 ## Submission Notes
 
-Current final status:
+Submission package includes:
 
-- Stage 18 - Docs + submission is complete.
-- Post-submission responsive, i18n, and accent theme polish is complete.
-- Post-submission visual design and iconography polish is complete.
-- The app works as a fullstack Time Tracker.
-- Backend and frontend builds pass.
-- Local end-to-end verification has covered tracker, today entries, projects, reports, CSV export, language switching, theme switching, and responsive headless render checks.
-- The prompt log and workflow files are included for review.
-- Docker is not included.
-- No real secrets are committed.
+- working fullstack Time Tracker code;
+- backend and frontend source;
+- local setup instructions;
+- API overview;
+- AI workflow rules;
+- prompt log;
+- build scripts;
+- deployment notes.
 
-Recommended reviewer flow:
+Verified project state:
 
-1. Start MongoDB locally.
-2. Install backend and frontend dependencies.
-3. Start backend with `MONGODB_URI=mongodb://localhost:27017/time_tracker`.
-4. Start frontend with `VITE_API_BASE_URL=http://localhost:5000/api`.
-5. Open `http://localhost:5173`.
-6. Create a project.
-7. Start and stop a timer.
-8. Review today's entries.
-9. Open reports and export CSV.
+- backend build passes;
+- frontend build passes;
+- tracker, today entries, projects, reports and CSV flows were checked during staged implementation and polish passes;
+- `uk/en` language switching, accent theme switching and responsive render checks were covered during post-submission polish;
+- no real secrets are committed;
+- Docker is not part of the current submission.
+

@@ -2167,6 +2167,73 @@ PROMPTS_LOG:
 
 ---
 
+### Follow-up for Entry 021 — Final README audit and rewrite
+
+- Entry number: Entry 021 documentation follow-up
+- Scope: Final README audit + rewrite in the existing `feat/post-submission-polish` branch.
+- Tool: Codex
+- Branch: `feat/post-submission-polish`
+- Key prompt: Audit the actual frontend/backend codebase, then rewrite `README.md` so it is accurate, strong, bilingual, reviewer-friendly, and aligned with the final fullstack Time Tracker state. Do not add features, do not create a branch, do not merge, and only update `PROMPTS_LOG.md` if useful.
+- Original user prompt:
+  - Original prompt summary: The user requested a documentation-only follow-up in the current `feat/post-submission-polish` branch. The task was to inspect the real codebase first, then rewrite README to reflect the actual stack, architecture, implemented flows, local setup, env variables, API, AI-first workflow, MongoDB rationale, deployment notes, `uk/en`, accent theme, responsive polish, CSV export and submission status. The README should be mainly Ukrainian with a compact English overview, without fake deployment claims or outdated details.
+  - Original prompt (verbatim excerpt):
+
+```md
+це follow-up documentation task у межах уже існуючої branch.
+Не створюй нову branch.
+Не мерж нічого.
+Працюй тільки в поточній branch:
+`feat/post-submission-polish`
+
+Поточна задача:
+потрібно **пройтись по всьому актуальному коду проєкту** і
+**переписати README.md так, щоб він був реально сильним,
+актуальним, чистим і submission-ready**.
+
+README має бути **пиздатим у хорошому сенсі**:
+- чистим;
+- впевненим;
+- без води;
+- без крінж-пафосу;
+- без технічної брехні;
+- без застарілої інформації.
+
+Після rewrite обов’язково виконай:
+1. `git status`
+2. `npm --prefix backend run build`
+3. `npm --prefix frontend run build`
+```
+
+- Logic: Verified the current branch, package scripts/dependencies, env example, frontend API/features/pages/i18n/theme structure, backend routes/controllers/services/repositories/models/validators/middlewares/shared structure, and rewrote README around the factual final project state.
+- Result: README is now a cleaner bilingual submission guide with accurate overview, stack, architecture, implemented features, UI/UX notes, local setup, env explanation, scripts, API overview, AI-first workflow, MongoDB rationale, deployment notes and submission notes.
+- Changed files:
+  - `README.md`
+  - `PROMPTS_LOG.md`
+- What was checked:
+  - current branch corrected to `feat/post-submission-polish`
+  - `frontend/package.json`
+  - `backend/package.json`
+  - `.env.example`
+  - `README.md`
+  - `PROMPTS_LOG.md`
+  - `AI_WORKFLOW.md`
+  - `frontend/src/api`
+  - `frontend/src/features`
+  - `frontend/src/pages`
+  - `frontend/src/i18n`
+  - `frontend/src/shared/theme.ts`
+  - `backend/src/routes`
+  - `backend/src/controllers`
+  - `backend/src/services`
+  - `backend/src/repositories`
+  - `backend/src/models`
+  - `backend/src/validators`
+  - `backend/src/middlewares`
+  - `backend/src/shared`
+- Minimal manual edits: No manual edits outside Codex. A pre-existing dirty state on `main` was preserved in `stash@{0}: On main: pre-readme-rewrite-local-dirty-state` before switching to the requested branch; it was not included in this documentation commit.
+
+---
+
 ## Template for next entries
 
 ```md
