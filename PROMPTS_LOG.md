@@ -2088,6 +2088,85 @@ PROMPTS_LOG:
 
 ---
 
+### Follow-up for Entry 021 — Frontend visual design and iconography polish
+
+- Entry number: Entry 021 follow-up
+- Scope: Post-submission visual polish task in the existing `feat/post-submission-polish` branch.
+- Tool: Codex
+- Branch: `feat/post-submission-polish`
+- Key prompt: Improve the already working frontend visual layer without creating a new branch or roadmap stage; focus first on cramped Today entries UI, then polish app shell, tracker, projects, and reports; add `react-icons`; keep existing backend/API/hooks intact; run frontend build and local responsive/headless checks; commit and push.
+- Original user prompt:
+  - Original prompt summary: The user clarified this is a follow-up visual polish task inside the existing branch, not a new roadmap stage. The requested work is frontend-only: production-like UI cleanup, stronger hierarchy, better spacing, cleaner Today entries cards, app shell/header polish, tracker/projects/reports polish, moderate `react-icons` usage, responsive checks, frontend build, commit, and push to `feat/post-submission-polish`.
+  - Original prompt (verbatim excerpt):
+
+```md
+це follow-up visual polish task у межах уже існуючої branch.
+Не створюй нову branch.
+Не мерж нічого.
+Працюй тільки в поточній branch:
+`feat/post-submission-polish`
+
+Головна ціль
+
+Зробити так, щоб frontend виглядав:
+- чисто
+- сучасно
+- охайно
+- консистентно
+- з нормальним візуальним ритмом
+- без відчуття “поламаного CRUD-екрану”
+- достатньо приємно для перевіряючого
+
+Головний focus
+
+Найбільша проблема зараз — **Today entries UI**.
+Саме туди треба вдарити першим пріоритетом.
+
+Після змін виконай:
+1. `git status`
+2. `npm --prefix frontend run build`
+3. `git add .`
+4. `git commit -m "feat: polish frontend visual design and iconography"`
+5. `git push origin feat/post-submission-polish`
+```
+
+- Logic: Keep the existing fullstack functionality and frontend architecture, improve only the presentation layer, add `react-icons`, make Today entries less cramped through card-based layout, and apply consistent visual hierarchy across shell, tracker, projects, and reports.
+- Result: Frontend received a stronger production-like visual pass with iconography, cleaner cards, better responsive grouping, polished controls, and less cramped Today entries management UI.
+- Changed files:
+  - `README.md`
+  - `PROMPTS_LOG.md`
+  - `frontend/package.json`
+  - `frontend/package-lock.json`
+  - `frontend/src/components/AppControls.tsx`
+  - `frontend/src/components/AppShell.tsx`
+  - `frontend/src/features/tracker/components/ActiveTimerPanel.tsx`
+  - `frontend/src/features/tracker/components/TrackerForm.tsx`
+  - `frontend/src/features/today-entries/TodayEntriesFeature.tsx`
+  - `frontend/src/features/today-entries/components/TodayEntriesGroupedSummary.tsx`
+  - `frontend/src/features/today-entries/components/TodayEntriesList.tsx`
+  - `frontend/src/features/today-entries/components/TodayEntryRow.tsx`
+  - `frontend/src/features/projects/ProjectsFoundation.tsx`
+  - `frontend/src/features/projects/components/ProjectColorField.tsx`
+  - `frontend/src/features/projects/components/ProjectForm.tsx`
+  - `frontend/src/features/projects/components/ProjectItemRow.tsx`
+  - `frontend/src/features/projects/components/ProjectsList.tsx`
+  - `frontend/src/features/reports/ReportsFoundation.tsx`
+  - `frontend/src/features/reports/components/ReportControls.tsx`
+  - `frontend/src/features/reports/components/ReportGroupedTable.tsx`
+  - `frontend/src/features/reports/components/ReportSummary.tsx`
+- What was checked:
+  - current branch remained `feat/post-submission-polish`
+  - `npm --prefix frontend run build` passes
+  - local Vite preview rendered `#/tracker`, `#/projects`, and `#/reports`
+  - headless Chrome checked `#/tracker`, `#/projects`, and `#/reports` at 375px, 768px, and 1280px
+  - no critical horizontal overflow was detected in those headless route checks
+  - language switch `uk -> en -> uk` works and persists through localStorage
+  - accent switch changes CSS variables and persists through localStorage
+  - preview server was stopped after verification; no listener remained on port `4173`
+- Minimal manual edits: No separate manual edits outside Codex. This follow-up changed only frontend presentation, dependency metadata for `react-icons`, and minimal docs/log notes.
+
+---
+
 ## Template for next entries
 
 ```md

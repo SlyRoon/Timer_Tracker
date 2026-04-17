@@ -30,6 +30,7 @@ Frontend:
 - TailwindCSS
 - i18next
 - react-i18next
+- react-icons
 
 Backend:
 
@@ -217,6 +218,7 @@ The post-submission polish pass added:
 - accent theme presets through CSS custom properties;
 - localStorage persistence for the selected accent theme;
 - responsive layout improvements for the app shell, navigation, tracker, today entries, projects, and reports UI;
+- visual design and iconography polish with `react-icons`;
 - `HH:MM` manual duration input in the today entries UI while keeping the backend contract as `durationMinutes`.
 
 Default language is Ukrainian. The UI also supports optional query parameters for verification or direct links:
@@ -437,6 +439,7 @@ Current final status:
 
 - Stage 18 - Docs + submission is complete.
 - Post-submission responsive, i18n, and accent theme polish is complete.
+- Post-submission visual design and iconography polish is complete.
 - The app works as a fullstack Time Tracker.
 - Backend and frontend builds pass.
 - Local end-to-end verification has covered tracker, today entries, projects, reports, CSV export, language switching, theme switching, and responsive headless render checks.

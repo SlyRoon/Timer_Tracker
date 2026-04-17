@@ -1,5 +1,6 @@
 import type { FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import { LuPlay, LuSparkles } from 'react-icons/lu';
 import type { Project, TaskName } from '../../../types';
 import { AutocompleteDropdown } from './AutocompleteDropdown';
 
@@ -42,16 +43,21 @@ export function TrackerForm({
 
   return (
     <form
-      className="rounded-lg border border-zinc-200 bg-white p-6"
+      className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm sm:p-6"
       onSubmit={onStart}
     >
-      <div>
-        <p className="text-sm font-medium text-[rgb(var(--color-accent-text))]">
-          {t('tracker.startEyebrow')}
-        </p>
-        <h2 className="mt-3 text-2xl font-semibold tracking-normal text-zinc-950">
-          {t('tracker.formTitle')}
-        </h2>
+      <div className="flex items-start gap-3">
+        <span className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-zinc-100 text-zinc-700">
+          <LuSparkles className="h-5 w-5" aria-hidden="true" />
+        </span>
+        <div>
+          <p className="text-sm font-semibold text-[rgb(var(--color-accent-text))]">
+            {t('tracker.startEyebrow')}
+          </p>
+          <h2 className="mt-1 text-2xl font-semibold tracking-normal text-zinc-950">
+            {t('tracker.formTitle')}
+          </h2>
+        </div>
       </div>
 
       <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_260px_auto] lg:items-end">
@@ -61,7 +67,7 @@ export function TrackerForm({
           </span>
           <input
             autoComplete="off"
-            className="mt-2 w-full rounded-md border border-zinc-300 bg-white px-4 py-3 text-base text-zinc-950 outline-none transition focus:border-[rgb(var(--color-accent))] focus:ring-2 focus:ring-[rgb(var(--color-accent-soft))]"
+            className="mt-2 w-full rounded-md border border-zinc-300 bg-white px-4 py-3 text-base text-zinc-950 shadow-sm outline-none transition focus:border-[rgb(var(--color-accent))] focus:ring-2 focus:ring-[rgb(var(--color-accent-soft))]"
             onBlur={onSuggestionsClose}
             onChange={(event) => onTaskNameChange(event.target.value)}
             onFocus={onSuggestionsOpen}
@@ -82,7 +88,7 @@ export function TrackerForm({
             {t('tracker.project')}
           </span>
           <select
-            className="mt-2 w-full rounded-md border border-zinc-300 bg-white px-4 py-3 text-base text-zinc-950 outline-none transition focus:border-[rgb(var(--color-accent))] focus:ring-2 focus:ring-[rgb(var(--color-accent-soft))] disabled:cursor-not-allowed disabled:bg-zinc-100"
+            className="mt-2 w-full rounded-md border border-zinc-300 bg-white px-4 py-3 text-base text-zinc-950 shadow-sm outline-none transition focus:border-[rgb(var(--color-accent))] focus:ring-2 focus:ring-[rgb(var(--color-accent-soft))] disabled:cursor-not-allowed disabled:bg-zinc-100"
             disabled={isLoadingProjects || projects.length === 0}
             onChange={(event) => onProjectChange(event.target.value)}
             value={selectedProjectId}
@@ -99,10 +105,11 @@ export function TrackerForm({
         </label>
 
         <button
-          className="rounded-md bg-[rgb(var(--color-accent))] px-6 py-3 text-sm font-semibold text-white transition hover:bg-[rgb(var(--color-accent-hover))] disabled:cursor-not-allowed disabled:bg-zinc-400"
+          className="inline-flex items-center justify-center gap-2 rounded-md bg-[rgb(var(--color-accent))] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[rgb(var(--color-accent-hover))] disabled:cursor-not-allowed disabled:bg-zinc-400"
           disabled={!canStart}
           type="submit"
         >
+          <LuPlay className="h-4 w-4" aria-hidden="true" />
           {isStarting ? t('tracker.starting') : t('tracker.start')}
         </button>
       </div>

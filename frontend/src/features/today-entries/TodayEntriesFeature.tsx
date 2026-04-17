@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { LuRefreshCw, LuRows3 } from 'react-icons/lu';
 import { TodayEntriesGroupedSummary } from './components/TodayEntriesGroupedSummary';
 import { TodayEntriesList } from './components/TodayEntriesList';
 import { TodayEntriesMessage } from './components/TodayEntriesMessage';
@@ -16,26 +17,32 @@ export function TodayEntriesFeature({
 
   return (
     <section className="space-y-5">
-      <div className="rounded-lg border border-zinc-200 bg-white p-6">
+      <div className="rounded-lg border border-zinc-200 bg-white p-5 shadow-sm sm:p-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <p className="text-sm font-medium text-[rgb(var(--color-accent-text))]">
-              {t('today.eyebrow')}
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-normal text-zinc-950">
-              {t('today.title')}
-            </h2>
-            <p className="mt-3 max-w-2xl text-base leading-7 text-zinc-600">
-              {t('today.description')}
-            </p>
+          <div className="flex min-w-0 items-start gap-3">
+            <span className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[rgb(var(--color-accent-soft))] text-[rgb(var(--color-accent-text))]">
+              <LuRows3 className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-[rgb(var(--color-accent-text))]">
+                {t('today.eyebrow')}
+              </p>
+              <h2 className="mt-1 text-2xl font-semibold tracking-normal text-zinc-950">
+                {t('today.title')}
+              </h2>
+              <p className="mt-3 max-w-2xl text-base leading-7 text-zinc-600">
+                {t('today.description')}
+              </p>
+            </div>
           </div>
 
           <button
-            className="rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-zinc-400 hover:text-zinc-950 disabled:cursor-not-allowed disabled:text-zinc-400"
+            className="inline-flex items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-700 shadow-sm transition hover:border-zinc-400 hover:text-zinc-950 disabled:cursor-not-allowed disabled:text-zinc-400"
             disabled={todayEntries.isLoading}
             onClick={todayEntries.loadTodayEntries}
             type="button"
           >
+            <LuRefreshCw className="h-4 w-4" aria-hidden="true" />
             {t('common.refresh')}
           </button>
         </div>

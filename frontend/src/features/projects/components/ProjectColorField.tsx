@@ -34,7 +34,7 @@ export function ProjectColorField({
       <div className="mt-2 flex flex-wrap items-center gap-3">
         <input
           aria-label={label}
-          className="h-11 w-14 cursor-pointer rounded-md border border-zinc-300 bg-white p-1 disabled:cursor-not-allowed"
+          className="h-11 w-14 cursor-pointer rounded-md border border-zinc-300 bg-white p-1 shadow-sm disabled:cursor-not-allowed"
           disabled={disabled}
           id={id}
           onChange={(event) => onColorChange(event.target.value)}
@@ -50,9 +50,9 @@ export function ProjectColorField({
               <button
                 aria-label={t('projects.useColor', { color: option })}
                 className={[
-                  'h-8 w-8 rounded-md border transition disabled:cursor-not-allowed',
+                  'h-8 w-8 rounded-md border shadow-sm transition disabled:cursor-not-allowed',
                   isSelected
-                    ? 'border-zinc-950 ring-2 ring-zinc-200'
+                    ? 'border-zinc-950 ring-2 ring-[rgb(var(--color-accent-soft))]'
                     : 'border-zinc-200 hover:border-zinc-400',
                 ].join(' ')}
                 disabled={disabled}

@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { LuCalendarDays, LuDownload, LuRefreshCw } from 'react-icons/lu';
 import type { ReportPeriod } from '../../../types';
 
 const PERIODS: Array<{ labelKey: string; value: ReportPeriod }> = [
@@ -31,8 +32,8 @@ export function ReportControls({
   const { t } = useTranslation();
 
   return (
-    <div className="mt-6 grid gap-5 lg:grid-cols-[minmax(0,1fr)_220px_auto_auto] lg:items-end">
-      <div>
+    <div className="mt-6 grid gap-5 rounded-lg border border-zinc-200 bg-zinc-50 p-4 lg:grid-cols-[minmax(0,1fr)_220px_auto_auto] lg:items-end">
+      <div className="min-w-0">
         <p className="text-sm font-medium text-zinc-700">
           {t('common.period')}
         </p>
@@ -43,7 +44,7 @@ export function ReportControls({
             return (
               <button
                 className={[
-                  'rounded-md border px-4 py-2 text-sm font-semibold transition',
+                  'rounded-md border px-4 py-2 text-sm font-semibold shadow-sm transition',
                   isSelected
                     ? 'border-[rgb(var(--color-accent))] bg-[rgb(var(--color-accent))] text-white'
                     : 'border-zinc-300 bg-white text-zinc-700 hover:border-zinc-400 hover:text-zinc-950',
@@ -65,7 +66,7 @@ export function ReportControls({
           {t('common.date')}
         </span>
         <input
-          className="mt-2 w-full rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm text-zinc-950 outline-none transition focus:border-[rgb(var(--color-accent))] focus:ring-2 focus:ring-[rgb(var(--color-accent-soft))]"
+          className="mt-2 w-full rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm text-zinc-950 shadow-sm outline-none transition focus:border-[rgb(var(--color-accent))] focus:ring-2 focus:ring-[rgb(var(--color-accent-soft))]"
           disabled={isLoading}
           onChange={(event) => onDateChange(event.target.value)}
           type="date"
@@ -74,20 +75,26 @@ export function ReportControls({
       </label>
 
       <button
-        className="rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-zinc-400 hover:text-zinc-950 disabled:cursor-not-allowed disabled:text-zinc-400"
+        className="inline-flex items-center justify-center gap-2 rounded-md border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-700 shadow-sm transition hover:border-zinc-400 hover:text-zinc-950 disabled:cursor-not-allowed disabled:text-zinc-400"
         disabled={isLoading}
         onClick={onRefresh}
         type="button"
       >
+        <LuRefreshCw className="h-4 w-4" aria-hidden="true" />
         {t('common.refresh')}
       </button>
 
       <button
-        className="rounded-md bg-[rgb(var(--color-accent))] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[rgb(var(--color-accent-hover))] disabled:cursor-not-allowed disabled:bg-zinc-400"
+        className="inline-flex items-center justify-center gap-2 rounded-md bg-[rgb(var(--color-accent))] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[rgb(var(--color-accent-hover))] disabled:cursor-not-allowed disabled:bg-zinc-400"
         disabled={isLoading || isExporting}
         onClick={onExportCsv}
         type="button"
       >
+        {isExporting ? (
+          <LuCalendarDays className="h-4 w-4" aria-hidden="true" />
+        ) : (
+          <LuDownload className="h-4 w-4" aria-hidden="true" />
+        )}
         {isExporting ? t('common.exporting') : t('common.exportCsv')}
       </button>
     </div>
