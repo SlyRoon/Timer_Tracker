@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface TodayEntriesMessageProps {
   error: string;
   isLoading: boolean;
@@ -9,10 +11,12 @@ export function TodayEntriesMessage({
   isLoading,
   message,
 }: TodayEntriesMessageProps) {
+  const { t } = useTranslation();
+
   if (isLoading) {
     return (
       <div className="mt-5 rounded-lg border border-zinc-200 bg-neutral-50 px-4 py-3 text-sm text-zinc-600">
-        Loading today entries...
+        {t('today.loading')}
       </div>
     );
   }
@@ -27,7 +31,7 @@ export function TodayEntriesMessage({
 
   if (message) {
     return (
-      <div className="mt-5 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+      <div className="mt-5 rounded-lg border border-[rgb(var(--color-accent-border))] bg-[rgb(var(--color-accent-soft))] px-4 py-3 text-sm text-[rgb(var(--color-accent-text))]">
         {message}
       </div>
     );

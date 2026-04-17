@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type {
   Project,
   TimeEntry,
@@ -31,10 +32,12 @@ export function TodayEntriesList({
   projects,
   updatingEntryId,
 }: TodayEntriesListProps) {
+  const { t } = useTranslation();
+
   if (!isLoading && entries.length === 0) {
     return (
-      <div className="mt-6 rounded-lg border border-dashed border-zinc-300 bg-neutral-50 p-6 text-sm text-zinc-600">
-        No entries for today yet.
+      <div className="mt-6 rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-6 text-sm text-zinc-600">
+        {t('today.empty')}
       </div>
     );
   }
@@ -44,14 +47,8 @@ export function TodayEntriesList({
   }
 
   return (
-    <div className="mt-6 overflow-hidden rounded-lg border border-zinc-200">
-      <div className="grid grid-cols-[1fr_180px_220px] gap-4 bg-neutral-50 px-4 py-3 text-xs font-semibold uppercase text-zinc-500 max-lg:hidden">
-        <span>Entry</span>
-        <span>Project</span>
-        <span>Manual time</span>
-      </div>
-
-      <div className="divide-y divide-zinc-200">
+    <div className="mt-6">
+      <div className="space-y-3">
         {entries.map((entry) => (
           <TodayEntryRow
             entry={entry}

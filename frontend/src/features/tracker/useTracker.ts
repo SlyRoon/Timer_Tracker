@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   getActiveTimer,
   getProjects,
@@ -12,12 +13,12 @@ import type { Project, TaskName, TimeEntry } from '../../types';
 const SUGGESTIONS_LIMIT = 8;
 const TICK_INTERVAL_MS = 1000;
 
-function getErrorMessage(error: unknown) {
+function getErrorMessage(error: unknown, fallback: string) {
   if (error instanceof Error) {
     return error.message;
   }
 
-  return 'Something went wrong. Try again.';
+  return fallback;
 }
 
 function getElapsedSeconds(activeTimer: TimeEntry | null, now: number) {
@@ -36,6 +37,7 @@ type UseTrackerOptions = {
 };
 
 export function useTracker(options: UseTrackerOptions = {}) {
+  const { t } = useTranslation();
   const [projects, setProjects] = useState<Project[]>([]);
   const [activeTimer, setActiveTimer] = useState<TimeEntry | null>(null);
   const [taskName, setTaskName] = useState('');
@@ -108,7 +110,7 @@ export function useTracker(options: UseTrackerOptions = {}) {
         );
       } catch (loadError) {
         if (isMounted) {
-          setError(getErrorMessage(loadError));
+          setError(getErrorMessage(loadError, t('common.genericError')));
         }
       } finally {
         if (isMounted) {
@@ -167,12 +169,12 @@ export function useTracker(options: UseTrackerOptions = {}) {
     const normalizedTaskName = taskName.trim();
 
     if (!normalizedTaskName) {
-      setError('Task name is required.');
+      setError(t('tracker.taskNameRequired'));
       return;
     }
 
     if (!selectedProjectId) {
-      setError('Select a project before starting the timer.');
+      setError(t('tracker.selectProjectRequired'));
       return;
     }
 
@@ -188,12 +190,12 @@ export function useTracker(options: UseTrackerOptions = {}) {
 
       setActiveTimer(nextActiveTimer);
       setTaskName(normalizedTaskName);
-      setStatusMessage('Timer started.');
+      setStatusMessage(t('tracker.timerStarted'));
       setIsSuggestionsOpen(false);
       setNow(Date.now());
       await refreshSuggestions(normalizedTaskName);
     } catch (startError) {
-      setError(getErrorMessage(startError));
+      setError(getErrorMessage(startError, t('common.genericError')));
     } finally {
       setIsStarting(false);
     }
@@ -208,11 +210,13 @@ export function useTracker(options: UseTrackerOptions = {}) {
       const stoppedEntry = await stopTimer();
 
       setActiveTimer(null);
-      setStatusMessage(`Timer stopped for "${stoppedEntry.taskName}".`);
+      setStatusMessage(
+        t('tracker.timerStopped', { taskName: stoppedEntry.taskName }),
+      );
       await refreshSuggestions(stoppedEntry.taskName);
       await options.onTimerStopped?.();
     } catch (stopError) {
-      setError(getErrorMessage(stopError));
+      setError(getErrorMessage(stopError, t('common.genericError')));
     } finally {
       setIsStopping(false);
     }

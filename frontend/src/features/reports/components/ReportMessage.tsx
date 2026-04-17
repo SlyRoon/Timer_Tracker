@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next';
+
 interface ReportMessageProps {
   error: string;
   isLoading: boolean;
@@ -9,10 +11,12 @@ export function ReportMessage({
   isLoading,
   message,
 }: ReportMessageProps) {
+  const { t } = useTranslation();
+
   if (isLoading) {
     return (
       <p className="mt-5 rounded-md border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-600">
-        Loading report...
+        {t('reports.loadingReport')}
       </p>
     );
   }
@@ -27,7 +31,7 @@ export function ReportMessage({
 
   if (message) {
     return (
-      <p className="mt-5 rounded-md border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+      <p className="mt-5 rounded-md border border-[rgb(var(--color-accent-border))] bg-[rgb(var(--color-accent-soft))] px-4 py-3 text-sm text-[rgb(var(--color-accent-text))]">
         {message}
       </p>
     );

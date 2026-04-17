@@ -1976,6 +1976,197 @@ PROMPTS_LOG:
 
 ---
 
+## Entry 021 — Post-submission polish: responsive, theme, i18n audit
+
+- Entry number: Entry 021
+- Етап: Post-submission bonus polish + verification pass
+- Інструмент: Codex
+- Branch: `feat/post-submission-polish`
+- Порядок виконання: Entry 021
+- Ключовий промпт: Condensed version — після завершення основного roadmap до Docs + submission пройти git lifecycle `docs/final-submission -> main`, створити `feat/post-submission-polish`, звірити готовий Time Tracker із початковим ТЗ, знайти слабкі місця, додати responsive polish, перемикач мови `uk/en` через `react-i18next` + JSON, accent/theme color switcher, не ламати working fullstack flow, оновити README/PROMPTS_LOG, виконати backend/frontend build, локальні checks, commit і push.
+- Original user prompt:
+  - Original prompt summary: Користувач уточнив, що це вже не базовий roadmap stage, а post-submission polish task. Потрібно працювати як senior AI engineer: провести audit проти ТЗ, не переписувати стек або БД, не робити replatforming, додати якісний frontend responsive polish, `uk/en` language switch на `react-i18next` з JSON-перекладами, accent theme switcher з persistence, перевірити ключові backend/frontend flows локально, оновити README і PROMPTS_LOG, зробити commit і push у `feat/post-submission-polish`.
+  - Original prompt (verbatim excerpt):
+
+```md
+ВАЖЛИВО:
+це вже не один із базових roadmap stages.
+Основний roadmap завершено до Docs + submission.
+Поточне завдання — **post-submission bonus polish + verification pass** для Time Tracker.
+
+Твоя ціль:
+1. ще раз звірити готовий проєкт із початковим тестовим завданням;
+2. перевірити, що ключовий функціонал реально сходиться з ТЗ;
+3. знайти й виправити слабкі місця;
+4. додати якісний frontend polish:
+   - адаптивність;
+   - перемикач мови `uk/en`;
+   - перемикач кольорової теми / accent theme;
+5. не зламати існуючий working fullstack flow;
+6. завершити все акуратно через git lifecycle, build, локальні перевірки, commit і push.
+
+Перед початком ОБОВ’ЯЗКОВО виконай:
+1. Перевір поточну branch
+2. Перевір, що working tree чистий
+3. Переключись у `main`
+4. Виконай `git pull origin main`
+5. Змерджи `docs/final-submission` у `main`
+6. Виконай `git push origin main`
+7. Видали локальну branch:
+   `git branch -d docs/final-submission`
+8. Спробуй видалити remote branch:
+   `git push origin --delete docs/final-submission`
+9. Створи нову branch:
+   `feat/post-submission-polish`
+
+Після змін виконай:
+1. `git status`
+2. `npm --prefix backend run build`
+3. `npm --prefix frontend run build`
+4. якщо build падає — виправ тільки те, що реально стосується цього prompt
+5. локально підніми backend і frontend та перевір ключові flows
+6. `git add .`
+7. `git commit -m "feat: add post-submission responsive i18n and theme polish"`
+8. `git push origin feat/post-submission-polish`
+```
+
+- Логіка: Провести audit готового застосунку проти ТЗ, зберегти існуючу архітектуру й backend flow, додати тільки post-submission frontend polish: responsive layout updates, i18n layer з JSON-перекладами, language switch, accent theme switch, persistence, і маленьке UX-виправлення manual duration input до `HH:MM`.
+- Результат: Time Tracker отримав українсько-англійський UI, accent theme switcher, responsive shell/form/table polish, `HH:MM` manual time input у Today entries, оновлену документацію і повторний fullstack verification pass без зміни стеку або backend архітектури.
+- Змінені файли:
+  - `README.md`
+  - `PROMPTS_LOG.md`
+  - `frontend/package.json`
+  - `frontend/package-lock.json`
+  - `frontend/src/main.tsx`
+  - `frontend/src/index.css`
+  - `frontend/src/components/AppShell.tsx`
+  - `frontend/src/components/AppControls.tsx`
+  - `frontend/src/hooks/useAccentTheme.ts`
+  - `frontend/src/i18n/index.ts`
+  - `frontend/src/i18n/locales/uk/common.json`
+  - `frontend/src/i18n/locales/en/common.json`
+  - `frontend/src/shared/routes.ts`
+  - `frontend/src/shared/theme.ts`
+  - `frontend/src/utils/duration-input.ts`
+  - `frontend/src/features/tracker/*`
+  - `frontend/src/features/today-entries/*`
+  - `frontend/src/features/projects/*`
+  - `frontend/src/features/reports/*`
+- Що перевірено:
+  - git lifecycle `docs/final-submission -> main -> feat/post-submission-polish` виконано
+  - mini-audit проти ТЗ: tracker, today entries, projects, reports, architecture, AI-first workflow
+  - `npm --prefix backend run build` проходить
+  - `npm --prefix frontend run build` проходить
+  - локальний backend піднято на тимчасовому port `5107`
+  - локальний frontend production preview піднято на тимчасовому port `5177`
+  - `GET /api/health` HTTP 200
+  - `POST /api/projects` HTTP 201
+  - `POST /api/timer/start` HTTP 201
+  - `GET /api/timer/active` HTTP 200
+  - `POST /api/timer/stop` HTTP 200
+  - `GET /api/task-names/suggestions?query=Polish&limit=5` HTTP 200
+  - `GET /api/time-entries/today` HTTP 200
+  - `PATCH /api/time-entries/:id/task-name` HTTP 200
+  - `PATCH /api/time-entries/:id/project` HTTP 200
+  - `PATCH /api/time-entries/:id/manual-time` HTTP 200
+  - `GET /api/time-entries/today/grouped` і `/totals` HTTP 200
+  - `DELETE /api/time-entries/:id` HTTP 200
+  - `GET /api/reports?period=day|week|month` HTTP 200
+  - `GET /api/reports/export?...format=csv` HTTP 200, `text/csv`, non-empty body
+  - headless DOM: `?lang=en&accent=rose#/tracker` показує English UI і rose accent
+  - headless DOM: language/theme persisted після reload без query params
+  - headless DOM: `?lang=uk&accent=blue#/reports` показує Ukrainian UI і blue accent
+  - responsive headless render at `375px`, `768px`, `1280px` для `#/tracker`, `#/projects`, `#/reports`
+  - після локальних перевірок тимчасові backend/frontend listener ports `5107` і `5177` не залишились активними
+- Знайдені й виправлені слабкі місця:
+  - Visible frontend text був hardcoded English-only; додано i18n layer і переклади.
+  - Не було language switch; додано `uk/en` control з persistence.
+  - Не було accent theme switch; додано theme presets через CSS custom properties і persistence.
+  - Частина layout була desktop-first; додано responsive wrapping/min-width/overflow strategies.
+  - Manual duration UI був raw minutes, тоді як ТЗ просить `гг:хв`; додано `HH:MM` input із конвертацією в `durationMinutes`.
+- Мінімальні ручні правки: Не було окремих ручних правок поза Codex. Для перевірок створено тимчасові тестові project/time-entry/task documents у локальній MongoDB `time_tracker`. Стара stash `stash@{0}: On feat/backend-routes: pre-stage-7-local-dirty-state` залишилась untouched і не входила в scope prompt.
+
+---
+
+### Follow-up for Entry 021 — Frontend visual design and iconography polish
+
+- Entry number: Entry 021 follow-up
+- Scope: Post-submission visual polish task in the existing `feat/post-submission-polish` branch.
+- Tool: Codex
+- Branch: `feat/post-submission-polish`
+- Key prompt: Improve the already working frontend visual layer without creating a new branch or roadmap stage; focus first on cramped Today entries UI, then polish app shell, tracker, projects, and reports; add `react-icons`; keep existing backend/API/hooks intact; run frontend build and local responsive/headless checks; commit and push.
+- Original user prompt:
+  - Original prompt summary: The user clarified this is a follow-up visual polish task inside the existing branch, not a new roadmap stage. The requested work is frontend-only: production-like UI cleanup, stronger hierarchy, better spacing, cleaner Today entries cards, app shell/header polish, tracker/projects/reports polish, moderate `react-icons` usage, responsive checks, frontend build, commit, and push to `feat/post-submission-polish`.
+  - Original prompt (verbatim excerpt):
+
+```md
+це follow-up visual polish task у межах уже існуючої branch.
+Не створюй нову branch.
+Не мерж нічого.
+Працюй тільки в поточній branch:
+`feat/post-submission-polish`
+
+Головна ціль
+
+Зробити так, щоб frontend виглядав:
+- чисто
+- сучасно
+- охайно
+- консистентно
+- з нормальним візуальним ритмом
+- без відчуття “поламаного CRUD-екрану”
+- достатньо приємно для перевіряючого
+
+Головний focus
+
+Найбільша проблема зараз — **Today entries UI**.
+Саме туди треба вдарити першим пріоритетом.
+
+Після змін виконай:
+1. `git status`
+2. `npm --prefix frontend run build`
+3. `git add .`
+4. `git commit -m "feat: polish frontend visual design and iconography"`
+5. `git push origin feat/post-submission-polish`
+```
+
+- Logic: Keep the existing fullstack functionality and frontend architecture, improve only the presentation layer, add `react-icons`, make Today entries less cramped through card-based layout, and apply consistent visual hierarchy across shell, tracker, projects, and reports.
+- Result: Frontend received a stronger production-like visual pass with iconography, cleaner cards, better responsive grouping, polished controls, and less cramped Today entries management UI.
+- Changed files:
+  - `README.md`
+  - `PROMPTS_LOG.md`
+  - `frontend/package.json`
+  - `frontend/package-lock.json`
+  - `frontend/src/components/AppControls.tsx`
+  - `frontend/src/components/AppShell.tsx`
+  - `frontend/src/features/tracker/components/ActiveTimerPanel.tsx`
+  - `frontend/src/features/tracker/components/TrackerForm.tsx`
+  - `frontend/src/features/today-entries/TodayEntriesFeature.tsx`
+  - `frontend/src/features/today-entries/components/TodayEntriesGroupedSummary.tsx`
+  - `frontend/src/features/today-entries/components/TodayEntriesList.tsx`
+  - `frontend/src/features/today-entries/components/TodayEntryRow.tsx`
+  - `frontend/src/features/projects/ProjectsFoundation.tsx`
+  - `frontend/src/features/projects/components/ProjectColorField.tsx`
+  - `frontend/src/features/projects/components/ProjectForm.tsx`
+  - `frontend/src/features/projects/components/ProjectItemRow.tsx`
+  - `frontend/src/features/projects/components/ProjectsList.tsx`
+  - `frontend/src/features/reports/ReportsFoundation.tsx`
+  - `frontend/src/features/reports/components/ReportControls.tsx`
+  - `frontend/src/features/reports/components/ReportGroupedTable.tsx`
+  - `frontend/src/features/reports/components/ReportSummary.tsx`
+- What was checked:
+  - current branch remained `feat/post-submission-polish`
+  - `npm --prefix frontend run build` passes
+  - local Vite preview rendered `#/tracker`, `#/projects`, and `#/reports`
+  - headless Chrome checked `#/tracker`, `#/projects`, and `#/reports` at 375px, 768px, and 1280px
+  - no critical horizontal overflow was detected in those headless route checks
+  - language switch `uk -> en -> uk` works and persists through localStorage
+  - accent switch changes CSS variables and persists through localStorage
+  - preview server was stopped after verification; no listener remained on port `4173`
+- Minimal manual edits: No separate manual edits outside Codex. This follow-up changed only frontend presentation, dependency metadata for `react-icons`, and minimal docs/log notes.
+
+---
+
 ## Template for next entries
 
 ```md

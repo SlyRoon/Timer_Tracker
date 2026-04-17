@@ -1,19 +1,19 @@
 export interface AppRoute {
-  label: string;
+  labelKey: string;
   path: '/tracker' | '/projects' | '/reports';
 }
 
 export const appRoutes: AppRoute[] = [
   {
-    label: 'Tracker',
+    labelKey: 'nav.tracker',
     path: '/tracker',
   },
   {
-    label: 'Projects',
+    labelKey: 'nav.projects',
     path: '/projects',
   },
   {
-    label: 'Reports',
+    labelKey: 'nav.reports',
     path: '/reports',
   },
 ];

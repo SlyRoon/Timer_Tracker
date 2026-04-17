@@ -2,7 +2,7 @@
 
 Fullstack Time Tracker application built for an AI Web Developer test task.
 
-The project is implemented end-to-end: React frontend, Express backend, MongoDB persistence, typed API contracts, validation, prompt logging, and a staged AI-first development workflow.
+The project is implemented end-to-end: React frontend, Express backend, MongoDB persistence, typed API contracts, validation, prompt logging, staged AI-first development workflow, and post-submission frontend polish.
 
 ## Project Overview
 
@@ -13,10 +13,12 @@ Time Tracker helps a user track work by project and task name. The app supports:
 - autocomplete for previously used task names;
 - managing projects and colors;
 - reviewing today's entries;
-- editing task name, project, and manual time corrections;
+- editing task name, project, and manual time corrections in `HH:MM` format;
 - grouping today's entries by project;
 - viewing day, week, and month reports;
-- exporting report data as CSV.
+- exporting report data as CSV;
+- switching the UI language between Ukrainian and English;
+- switching the frontend accent color theme.
 
 ## Tech Stack
 
@@ -26,6 +28,9 @@ Frontend:
 - TypeScript
 - Vite
 - TailwindCSS
+- i18next
+- react-i18next
+- react-icons
 
 Backend:
 
@@ -79,6 +84,12 @@ frontend/src/
 
 Page components stay thin. API calls live in `frontend/src/api`, feature state lives in hooks/features, and UI components are kept mostly presentational.
 
+Frontend localization and theming are kept in dedicated layers:
+
+- `frontend/src/i18n` configures `react-i18next` with JSON resources.
+- `frontend/src/shared/theme.ts` defines accent presets.
+- `frontend/src/hooks/useAccentTheme.ts` applies and persists the selected accent.
+
 ## MongoDB Choice
 
 MongoDB + Mongoose is a deliberate choice for this Time Tracker implementation. The domain is document-friendly: projects, task name history, and time entries can be represented cleanly as collections with simple references. Mongoose provides schemas, validation at the persistence boundary, ObjectId references, timestamps, and a lightweight model layer without introducing a heavier SQL/ORM setup.
@@ -129,6 +140,9 @@ Backend:
 Frontend:
 
 - App shell with navigation.
+- Responsive layout polish for desktop, tablet, and mobile widths.
+- Ukrainian / English language switch with JSON translations and local persistence.
+- Accent color switcher with local persistence.
 - Tracker page:
   - task input
   - autocomplete dropdown
@@ -139,7 +153,7 @@ Frontend:
 - Today entries UI:
   - list entries
   - edit task/project
-  - manual time correction
+  - manual time correction using `HH:MM` input
   - delete entry
   - grouped totals
 - Projects UI:
@@ -176,6 +190,7 @@ root/
       shared/
       validators/
   frontend/
+    package-lock.json
     package.json
     tsconfig.json
     vite.config.ts
@@ -186,10 +201,31 @@ root/
       components/
       features/
       hooks/
+      i18n/
       pages/
       shared/
       types/
       utils/
+```
+
+## Frontend Polish
+
+The post-submission polish pass added:
+
+- `uk/en` language switching through `react-i18next`;
+- JSON locale resources under `frontend/src/i18n/locales`;
+- localStorage persistence for the selected language;
+- accent theme presets through CSS custom properties;
+- localStorage persistence for the selected accent theme;
+- responsive layout improvements for the app shell, navigation, tracker, today entries, projects, and reports UI;
+- visual design and iconography polish with `react-icons`;
+- `HH:MM` manual duration input in the today entries UI while keeping the backend contract as `durationMinutes`.
+
+Default language is Ukrainian. The UI also supports optional query parameters for verification or direct links:
+
+```text
+http://localhost:5173/?lang=en&accent=rose#/tracker
+http://localhost:5173/?lang=uk&accent=blue#/reports
 ```
 
 ## Local Setup
@@ -402,8 +438,11 @@ The frontend and backend can be deployed separately. Make sure backend CORS `CLI
 Current final status:
 
 - Stage 18 - Docs + submission is complete.
+- Post-submission responsive, i18n, and accent theme polish is complete.
+- Post-submission visual design and iconography polish is complete.
 - The app works as a fullstack Time Tracker.
 - Backend and frontend builds pass.
+- Local end-to-end verification has covered tracker, today entries, projects, reports, CSV export, language switching, theme switching, and responsive headless render checks.
 - The prompt log and workflow files are included for review.
 - Docker is not included.
 - No real secrets are committed.

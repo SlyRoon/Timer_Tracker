@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   deleteTimeEntry,
   getProjects,
@@ -17,15 +18,16 @@ import type {
   UpdateEntryManualTimePayload,
 } from '../../types';
 
-function getErrorMessage(error: unknown) {
+function getErrorMessage(error: unknown, fallback: string) {
   if (error instanceof Error) {
     return error.message;
   }
 
-  return 'Something went wrong. Try again.';
+  return fallback;
 }
 
 export function useTodayEntries(refreshSignal = 0) {
+  const { t } = useTranslation();
   const [entries, setEntries] = useState<TimeEntry[]>([]);
   const [groups, setGroups] = useState<TodayEntryGroup[]>([]);
   const [totals, setTotals] = useState<ProjectTotal[]>([]);
@@ -58,11 +60,11 @@ export function useTodayEntries(refreshSignal = 0) {
       setGroups(nextGroups);
       setTotals(nextTotals);
     } catch (loadError) {
-      setError(getErrorMessage(loadError));
+      setError(getErrorMessage(loadError, t('common.genericError')));
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     loadTodayEntries();
@@ -82,7 +84,7 @@ export function useTodayEntries(refreshSignal = 0) {
       await loadTodayEntries();
       setMessage(nextMessage);
     } catch (updateError) {
-      setError(getErrorMessage(updateError));
+      setError(getErrorMessage(updateError, t('common.genericError')));
     } finally {
       setUpdatingEntryId(null);
     }
@@ -92,14 +94,14 @@ export function useTodayEntries(refreshSignal = 0) {
     runEntryUpdate(
       entryId,
       () => updateEntryTaskName(entryId, { taskName: taskName.trim() }),
-      'Task name updated.',
+      t('today.taskUpdated'),
     );
 
   const saveProject = (entryId: string, projectId: string) =>
     runEntryUpdate(
       entryId,
       () => updateEntryProject(entryId, { projectId }),
-      'Project updated.',
+      t('today.projectUpdated'),
     );
 
   const saveManualTime = (
@@ -109,14 +111,14 @@ export function useTodayEntries(refreshSignal = 0) {
     runEntryUpdate(
       entryId,
       () => updateEntryManualTime(entryId, payload),
-      'Time correction saved.',
+      t('today.timeSaved'),
     );
 
   const removeEntry = (entryId: string) =>
     runEntryUpdate(
       entryId,
       () => deleteTimeEntry(entryId),
-      'Entry deleted.',
+      t('today.entryDeleted'),
     );
 
   return {
